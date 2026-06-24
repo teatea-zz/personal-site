@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #0c0c0c; }
+body { font-family: 'SUIT Variable', -apple-system, sans-serif; }
+button { background-color: transparent; }
+
+::selection { background: #ffd270; color: #0e0e0e; }
+
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 9px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+:root {
+  --accent: #ffd270;
+  --accent-fg: #0e0e0e;
+
+  /* Admin 폰트 — 데스크톱 ≥1600px */
+  --fs-input: 18px;
+  --fs-title: 17px;
+  --fs-role:  16px;
+  --fs-btn:   15px;
+  --fs-label: 14px;
+}
+
+/* Admin 폰트 — 노트북 1024–1599px (LG그램·1440 포함) */
+@media (max-width: 1599px) {
+  :root {
+    --fs-input: 16px; --fs-title: 15px; --fs-role: 14px; --fs-btn: 13px; --fs-label: 13px;
+  }
+}
+/* Admin 폰트 — 태블릿 768–1023px */
+@media (max-width: 1023px) {
+  :root {
+    --fs-input: 14px; --fs-title: 14px; --fs-role: 13px; --fs-btn: 13px; --fs-label: 12px;
+  }
+}
+/* Admin 폰트 — 모바일 <768px */
+@media (max-width: 767px) {
+  :root {
+    --fs-input: 14px; --fs-title: 13px; --fs-role: 12px; --fs-btn: 12px; --fs-label: 12px;
+  }
+}
+
+.hover-accent:hover {
+  background: var(--accent) !important;
+  color: var(--accent-fg) !important;
+}
+
+.hover-accent-border:hover {
+  background: var(--accent) !important;
+  color: var(--accent-fg) !important;
+  border-color: var(--accent) !important;
+}
+
+.card-img { transition: transform 0.6s ease; }
+.card-img:hover { transform: scale(1.05); }
+.gallery-img { transition: transform 0.5s; }
+.gallery-img:hover { transform: scale(1.04); }
+
+/* ── Admin responsive ── */
+.adm-notes-head {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px 128px;
+  gap: 12px; padding: 10px 18px;
+  border-bottom: 1px solid rgba(35,31,26,.1);
+}
+.adm-notes-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px 128px;
+  gap: 12px; padding: 14px 18px;
+  border-bottom: 1px solid rgba(35,31,26,.06);
+  align-items: center;
+}
+.adm-works-head {
+  display: grid;
+  grid-template-columns: 64px 1fr 90px 60px 128px;
+  gap: 12px; padding: 10px 18px;
+  border-bottom: 1px solid rgba(35,31,26,.1);
+}
+.adm-works-row {
+  display: grid;
+  grid-template-columns: 64px 1fr 90px 60px 128px;
+  gap: 12px; padding: 10px 18px;
+  border-bottom: 1px solid rgba(35,31,26,.06);
+  align-items: center;
+}
+
+/* Center 정렬 — Notes: Date·Type·Order / Works: Role·Year·Order (헤더·값 동시) */
+.adm-notes-head > :nth-child(1), .adm-notes-row > :nth-child(1),
+.adm-notes-head > :nth-child(3), .adm-notes-row > :nth-child(3) { text-align: center; }
+.adm-works-head > :nth-child(3), .adm-works-row > :nth-child(3),
+.adm-works-head > :nth-child(4), .adm-works-row > :nth-child(4) { text-align: center; }
+/* 액션 버튼(Edit/Del)은 우측 정렬 */
+.adm-col-actions { justify-content: flex-end; }
+.adm-form-grid2   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.adm-form-grid3   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
+.adm-form-grid3eq { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.adm-form-grid3-bt { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
+
+/* Laptop (1024–1440px): 리스트 컬럼 축소 + 폼 3열 → 2열 */
+@media (max-width: 1440px) {
+  .adm-notes-head,
+  .adm-notes-row { grid-template-columns: 100px 1fr 76px 112px; gap: 10px; }
+  .adm-works-head,
+  .adm-works-row { grid-template-columns: 56px 1fr 80px 52px 112px; gap: 10px; }
+
+  .adm-form-grid3   { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adm-form-grid3eq { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adm-form-grid3-bt { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adm-form-grid2   { gap: 10px; }
+}
+
+@media (max-width: 720px) {
+  /* 모바일: center 정렬 해제, 좌측 정렬 */
+  .adm-notes-row > *, .adm-works-row > * { text-align: left; }
+
+  .adm-notes-head { display: none; }
+  .adm-notes-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "title actions" "meta  actions";
+    row-gap: 4px; column-gap: 12px;
+  }
+  .adm-notes-row .adm-col-date   { display: none; }
+  .adm-notes-row .adm-col-title  { grid-area: title; }
+  .adm-notes-row .adm-col-type   { grid-area: meta; }
+  .adm-notes-row .adm-col-order  { display: none; }
+  .adm-notes-row .adm-col-actions{ grid-area: actions; align-self: center; }
+
+  .adm-works-head { display: none; }
+  .adm-works-row {
+    grid-template-columns: 48px 1fr auto;
+    grid-template-areas: "thumb title   actions"
+                         "thumb role    actions";
+    row-gap: 4px; column-gap: 12px;
+  }
+  .adm-works-row .adm-col-thumb  { grid-area: thumb; }
+  .adm-works-row .adm-col-title  { grid-area: title; }
+  .adm-works-row .adm-col-role   { grid-area: role; }
+  .adm-works-row .adm-col-year   { display: none; }
+  .adm-works-row .adm-col-order  { display: none; }
+  .adm-works-row .adm-col-actions{ grid-area: actions; align-self: center; }
+
+  .adm-form-grid2   { grid-template-columns: 1fr; }
+  .adm-form-grid3   { grid-template-columns: 1fr 1fr; }
+  .adm-form-grid3eq { grid-template-columns: 1fr 1fr; }
+  .adm-form-grid3-bt { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .adm-form-grid3   { grid-template-columns: 1fr; }
+  .adm-form-grid3eq { grid-template-columns: 1fr; }
+  .adm-form-grid3-bt { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+</style>
+</helmet>
+
+<div style="width:max-content;min-width:100%;min-height:100vh;box-sizing:border-box;padding:48px;background:#e7e5df;font-family:'IBM Plex Mono',ui-monospace,monospace">
+
+  <div style="margin-bottom:36px">
+    <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a877e">Jiwoo Han — Personal Site</div>
+    <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700;font-size:30px;letter-spacing:-.02em;color:#1a1a1a;margin-top:6px">Home — layout &amp; colour directions</div>
+    <div style="font-size:12px;color:#76736b;margin-top:6px;max-width:60ch">Three takes on the same dark, Swiss-grid concept. Pick one (or mix) — the live interactive build uses 01 by default.</div>
+  </div>
+
+  <div style="display:flex;gap:48px;align-items:flex-start">
+
+    <!-- V1 -->
+    <div style="flex:none;width:480px">
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6f6c64;margin-bottom:10px">01 — Corner glass · Sage <span style="color:#9a9890">(default)</span></div>
+      <div style="position:relative;width:480px;height:620px;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18);background:#0c0c0c">
+        <div style="position:absolute;inset:0;background-image:url('https://picsum.photos/seed/jiwoo-field-mist-7/960/1240');background-size:cover;background-position:center;filter:grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,.6),rgba(8,8,8,.12) 40%,rgba(8,8,8,.66))"></div>
+        <div style="position:absolute;top:22px;left:22px;width:312px;background:rgba(15,15,15,.6);backdrop-filter:blur(20px) saturate(1.1);-webkit-backdrop-filter:blur(20px) saturate(1.1);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:20px;color:#f4f4f1">
+          <div style="display:flex;justify-content:space-between;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,244,241,.5)"><span>Portfolio + Notes</span><span>©26</span></div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700;font-size:48px;line-height:.9;letter-spacing:-.045em;margin:10px 0 0">Jiwoo Han</div>
+          <div style="font-size:10.5px;line-height:1.55;color:rgba(244,244,241,.62);margin:12px 0 14px">Designer &amp; perpetual student. Portfolio kept next to the studies.</div>
+          <div style="border-top:1px solid rgba(255,255,255,.1)">
+            <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:10px"><span style="color:#eee">2026.06.12 · Swiss grid</span><span style="color:rgba(244,244,241,.4)">N°01</span></div>
+            <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:10px"><span style="color:#eee">2026.05.30 · OKLCH systems</span><span style="color:rgba(244,244,241,.4)">N°02</span></div>
+            <div style="display:flex;justify-content:space-between;padding:9px 0;font-size:10px"><span style="color:rgba(244,244,241,.4);text-decoration:line-through">2026.05.18 · Subgrid</span><span style="color:rgba(244,244,241,.4)">Draft</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:14px">
+            <div style="border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:9px;text-align:center;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase">Work ↗</div>
+            <div style="border:1px solid #c7d4b0;background:#c7d4b0;color:#0e0e0e;border-radius:6px;padding:9px;text-align:center;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase">Index ↗</div>
+          </div>
+        </div>
+        <div style="position:absolute;right:18px;bottom:18px;display:flex;flex-direction:column;background:rgba(15,15,15,.72);border:1px solid rgba(255,255,255,.14);border-radius:10px;overflow:hidden;width:50px;color:rgba(244,244,241,.7);font-size:9px;letter-spacing:.1em;text-align:center">
+          <div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1)">IG</div>
+          <div style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1)">GIT</div>
+          <div style="padding:9px 0">MAIL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2 -->
+    <div style="flex:none;width:480px">
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6f6c64;margin-bottom:10px">02 — Centered solid · Amber</div>
+      <div style="position:relative;width:480px;height:620px;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18);background:#0c0c0c">
+        <div style="position:absolute;inset:0;background-image:url('https://picsum.photos/seed/jh-field-rec/960/1240');background-size:cover;background-position:center;filter:grayscale(1) sepia(.55) saturate(1.5) hue-rotate(48deg) contrast(1.04) brightness(.78)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,10,8,.5),rgba(8,10,8,.72))"></div>
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:380px;background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:24px;color:#f4f4f1;box-shadow:0 30px 70px -30px rgba(0,0,0,.8)">
+          <div style="text-align:center;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,244,241,.5)">Portfolio + Notes — Seoul</div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700;font-size:52px;line-height:.9;letter-spacing:-.045em;text-align:center;margin:8px 0 0">Jiwoo Han</div>
+          <div style="text-align:center;font-size:10.5px;color:rgba(244,244,241,.6);margin:12px 0 16px">Designer &amp; perpetual student</div>
+          <div style="border-top:1px solid rgba(255,255,255,.12)">
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span style="color:#eee">Notes on the Swiss grid</span><span style="color:#e8b400">01</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span style="color:#eee">OKLCH color systems</span><span style="color:#e8b400">02</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span style="color:#eee">The Vignelli Canon</span><span style="color:#e8b400">04</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:10px"><span style="color:#eee">Daily log — week 14</span><span style="color:#e8b400">05</span></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:16px;justify-content:center">
+            <div style="border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:9px 16px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase">Work</div>
+            <div style="border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:9px 16px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase">About</div>
+            <div style="border:1px solid #e8b400;background:#e8b400;color:#0e0e0e;border-radius:6px;padding:9px 16px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase">Index</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V3 -->
+    <div style="flex:none;width:480px">
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6f6c64;margin-bottom:10px">03 — Split index · Red</div>
+      <div style="position:relative;width:480px;height:620px;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18);background:#0c0c0c;display:flex">
+        <div style="width:42%;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background-image:url('https://picsum.photos/seed/jh-type-spec/700/1240');background-size:cover;background-position:center;filter:grayscale(1) contrast(1.08) brightness(.92)"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,8,.25),rgba(8,8,8,.55))"></div>
+          <div style="position:absolute;left:14px;bottom:14px;color:#f4f4f1;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7">©2026 — Seoul</div>
+        </div>
+        <div style="width:58%;background:#111;color:#f4f4f1;padding:22px;display:flex;flex-direction:column">
+          <div style="font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#e0301e">Portfolio + Notes</div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:700;font-size:42px;line-height:.88;letter-spacing:-.045em;margin:10px 0 0">Jiwoo<br/>Han</div>
+          <div style="font-size:10px;line-height:1.55;color:rgba(244,244,241,.6);margin:12px 0 14px">Half portfolio, half public notebook.</div>
+          <div style="border-top:1px solid rgba(255,255,255,.14);margin-top:auto">
+            <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span>Swiss grid</span><span style="color:#e0301e">01</span></div>
+            <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span>OKLCH systems</span><span style="color:#e0301e">02</span></div>
+            <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px"><span>Vignelli Canon</span><span style="color:#e0301e">04</span></div>
+            <div style="display:flex;justify-content:space-between;padding:9px 0;font-size:10px"><span style="color:rgba(244,244,241,.4);text-decoration:line-through">Subgrid</span><span style="color:rgba(244,244,241,.4)">Draft</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:14px">
+            <div style="border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:9px;text-align:center;font-size:9px;letter-spacing:.08em;text-transform:uppercase">Work</div>
+            <div style="border:1px solid #e0301e;background:#e0301e;color:#fff;border-radius:6px;padding:9px;text-align:center;font-size:9px;letter-spacing:.08em;text-transform:uppercase">Index</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
