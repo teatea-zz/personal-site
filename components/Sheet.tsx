@@ -10,7 +10,7 @@ import IndexSection from './IndexSection'
 
 type View = 'work' | 'project' | 'note' | 'about' | 'contact' | 'index' | null
 
-const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log' }
+const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log', '회고': 'Retro', '일상': 'Daily' }
 
 interface Props {
   view: View
@@ -61,11 +61,11 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, onClos
       transition: 'transform .55s cubic-bezier(.16,1,.3,1)',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px clamp(16px,3vw,34px)', borderBottom: '1px solid rgba(255,255,255,.1)', flex: 'none' }}>
-        <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: '.02em', color: 'rgba(244,244,241,.62)' }}>{title}</span>
+        <span style={{ fontFamily: view === 'project' ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: 'rgba(244,244,241,.62)' }}>{title}</span>
         <button
           onClick={onClose}
           className="hover-accent"
-          style={{ border: '1px solid rgba(255,255,255,.24)', color: '#f4f4f1', fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 11, letterSpacing: '.06em', padding: '8px 18px', borderRadius: 8, cursor: 'pointer', transition: '.16s' }}
+          style={{ border: '1px solid rgba(255,255,255,.24)', color: '#f4f4f1', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, padding: '8px 18px', borderRadius: 8, cursor: 'pointer', transition: '.16s' }}
         >Close</button>
       </div>
 

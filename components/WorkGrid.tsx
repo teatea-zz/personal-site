@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowUpRight } from 'lucide-react'
 import type { Work } from '@/types/database'
 
 const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
@@ -39,12 +40,12 @@ export default function WorkGrid({ works, onOpen }: Props) {
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, marginTop: 11 }}>
-            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14.5, fontWeight: 700, color: '#f2f2ee' }}>{w.title}</span>
-            <span style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 10, letterSpacing: '.14em', color: 'rgba(244,244,241,.4)' }}>{w.tag}</span>
+            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 700, color: '#f2f2ee' }}>{w.title}</span>
+            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'rgba(244,244,241,.4)' }}>{w.tag}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 4 }}>
             <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, color: 'rgba(244,244,241,.52)' }}>{w.role} · {w.year}</span>
-            <span style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 11, fontWeight: 500, color: 'rgba(244,244,241,.7)' }}>View ↗</span>
+            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, fontWeight: 500, color: 'rgba(244,244,241,.7)', display: 'flex', alignItems: 'center', gap: 3 }}>View <ArrowUpRight size={16} strokeWidth={1.5} /></span>
           </div>
         </button>
       ))}

@@ -1,10 +1,14 @@
+export type TextBlock  = { type: 'text';  content: string }
+export type ImageBlock = { type: 'image'; url: string; alt?: string }
+export type Block = TextBlock | ImageBlock
+
 export type Note = {
   id: number
   type: string
   date: string
   title: string
   sub: string
-  body: string[]
+  body: Block[]
   private: boolean
   created_at: string
 }
@@ -21,7 +25,7 @@ export type Work = {
   tools: string
   tag: string
   img: string
-  description: string[]
+  description: Block[]
   gallery: string[]
   created_at: string
 }

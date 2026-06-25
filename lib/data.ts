@@ -9,8 +9,9 @@ export const SEED_NOTES: Note[] = [
     title: '스위스 그리드에 관한 노트',
     sub: '뮐러-브로크만, 다시 읽기',
     body: [
-      "그리드는 감옥이 아니라, 한 번 내려두면 매 페이지마다 다시 고민하지 않아도 되는 결정의 묶음이다. 뮐러-브로크만의 핵심은 선이 아니라, 그 선으로 매번 되돌아오는 규율이었다.",
-      "화면에서는 8단 그리드로 자꾸 돌아오게 된다. 휴대폰에서도 살아남고, 4단으로 깔끔하게 접히며, 한 장의 이미지가 전체 폭을 원할 때 일부러 규칙을 깰 여백까지 남는다."
+      { type: 'text', content: "그리드는 감옥이 아니라, 한 번 내려두면 매 페이지마다 다시 고민하지 않아도 되는 결정의 묶음이다. 뮐러-브로크만의 핵심은 선이 아니라, 그 선으로 매번 되돌아오는 규율이었다. 규칙이 자동화를 만들고, 자동화가 판단을 해방시킨다." },
+      { type: 'text', content: "화면에서는 8단 그리드로 자꾸 돌아오게 된다. 휴대폰에서도 살아남고, 4단으로 깔끔하게 접히며, 한 장의 이미지가 전체 폭을 원할 때 일부러 규칙을 깰 여백까지 남는다. 이 유연성이야말로 시스템의 진짜 목적이다." },
+      { type: 'text', content: "인쇄물에서 픽셀로 넘어오면서 그리드 위에 반응형이라는 변수가 하나 더 얹혔다. 하지만 원칙은 같다 — 여백은 정보다. 비워두는 결정이 채우는 결정만큼 중요하다." },
     ],
     private: false,
     created_at: new Date().toISOString(),
@@ -22,8 +23,9 @@ export const SEED_NOTES: Note[] = [
     title: 'OKLCH 컬러 시스템, 실전',
     sub: '지각 기반 팔레트 설계',
     body: [
-      "HEX는 편리하지만 지각적으로는 정직하지 않다. OKLCH는 계속 어림짐작하던 내 머릿속 한 조각을 바로잡아 준다.",
-      "명도와 채도를 고정하고 색상만 걷는다. 그러면 액센트가 우연이 아니라 하나의 가족이 되고, 다크 모드가 더 이상 탁해지지 않는다."
+      { type: 'text', content: "HEX는 편리하지만 지각적으로는 정직하지 않다. OKLCH는 계속 어림짐작하던 내 머릿속 한 조각을 바로잡아 준다. 동일한 L 값이면 어떤 색이든 눈에 같은 밝기로 들어온다 — HSL이 한 번도 해주지 못했던 약속이다." },
+      { type: 'text', content: "명도와 채도를 고정하고 색상만 걷는다. 그러면 액센트가 우연이 아니라 하나의 가족이 되고, 다크 모드가 더 이상 탁해지지 않는다. 이 사이트의 #ffd270 액센트도 OKLCH로 정한 다음 HEX로 변환한 값이다." },
+      { type: 'text', content: "브라우저 지원이 완전하지 않을 때 @supports와 함께 fallback을 두는 패턴이 아직은 필요하다. 하지만 점점 줄어들고 있다. 한 번 배우면 돌아가기 어렵다." },
     ],
     private: false,
     created_at: new Date().toISOString(),
@@ -35,8 +37,9 @@ export const SEED_NOTES: Note[] = [
     title: '그리드 변주 실험',
     sub: '8단 그리드를 비트는 연습',
     body: [
-      "8단 그리드를 기본으로 두고, 한 칸씩 어긋내거나 합치며 리듬을 만드는 연습. 규칙이 있어야 규칙을 깨는 일이 의미를 가진다.",
-      "개인적인 실험이라 결과보다 과정을 남긴다."
+      { type: 'text', content: "8단 그리드를 기본으로 두고, 한 칸씩 어긋내거나 합치며 리듬을 만드는 연습. 규칙이 있어야 규칙을 깨는 일이 의미를 가진다. 아무 규칙도 없는 파괴는 그냥 소음이다." },
+      { type: 'text', content: "텍스트 블록을 홀수 칸에 두고, 이미지는 짝수 칸 경계를 넘어서도록 설계했다. 긴장감이 생겼다. 컬럼을 깨는 순간 독자의 눈이 멈춘다 — 그 멈춤을 원하는 곳에 심어두는 것이 작업이다." },
+      { type: 'text', content: "개인적인 실험이라 결과보다 과정을 남긴다. 최종 레이아웃은 쓰지 않았지만, 이 연습에서 건진 규칙 몇 가지는 이후 프로젝트에 계속 쓰이고 있다." },
     ],
     private: false,
     created_at: new Date().toISOString(),
@@ -48,7 +51,8 @@ export const SEED_NOTES: Note[] = [
     title: '서브그리드: 현장 기록',
     sub: '초고 — 작업 중',
     body: [
-      "자리표시자. 이 사이트의 갤러리를 서브그리드로 다시 만들며 남긴 기록. 사파리를 그만 깨뜨리면 공개할 예정."
+      { type: 'text', content: "자리표시자. 이 사이트의 갤러리를 서브그리드로 다시 만들며 남긴 기록. 사파리를 그만 깨뜨리면 공개할 예정." },
+      { type: 'text', content: "subgrid가 CSS Grid의 진짜 완성형이라는 걸 알게 됐다. 부모의 선을 자식이 그대로 물려받는다는 개념은 단순한데, 실제로 쓰면 얼마나 많은 음수 마진과 calc()를 지워낼 수 있는지 놀랍다." },
     ],
     private: true,
     created_at: new Date().toISOString(),
@@ -60,8 +64,9 @@ export const SEED_NOTES: Note[] = [
     title: '독서 — 비넬리 카논',
     sub: '절제와 규율에 관하여',
     body: [
-      "비넬리의 카논은 간직한 것보다 버린 것이 더 많은 사람의 글처럼 읽힌다. 그 절제 자체가 내용이다.",
-      "취향이란 결국 하지 않기로 정한 것들의 목록이다."
+      { type: 'text', content: "비넬리의 카논은 간직한 것보다 버린 것이 더 많은 사람의 글처럼 읽힌다. 그 절제 자체가 내용이다. 폰트는 두 개면 충분하다고, 컬러는 한 가지 액센트면 충분하다고 말하는 사람의 작업은 실제로 그걸 증명한다." },
+      { type: 'text', content: "취향이란 결국 하지 않기로 정한 것들의 목록이다. 좋은 취향은 '이건 예쁘다'는 긍정이 아니라 '이건 필요 없다'는 부정의 축적에서 온다. 비넬리를 읽고 나서 내 작업 파일에서 레이어 두 개를 지웠다." },
+      { type: 'text', content: "오래된 책이지만 낡지 않았다. 트렌드가 아니라 원칙을 다루기 때문이다. 1년에 한 번쯤은 꺼내 읽을 책 목록에 올려뒀다." },
     ],
     private: false,
     created_at: new Date().toISOString(),
@@ -73,8 +78,9 @@ export const SEED_NOTES: Note[] = [
     title: '데일리 로그 — 14주차',
     sub: '습작과 작은 성취',
     body: [
-      "아카이브 스키마를 끝냈고, 두 챕터를 읽었고, OKLCH 팔레트를 이 사이트에 적용했다.",
-      "작은 성취도 성취다."
+      { type: 'text', content: "아카이브 스키마를 끝냈고, 두 챕터를 읽었고, OKLCH 팔레트를 이 사이트에 적용했다. 한 주에 세 가지면 많은 편이다." },
+      { type: 'text', content: "작은 성취도 성취다. 큰 것만 기록하다 보면 대부분의 날들이 빈칸이 된다. 로그는 기록 자체가 목적이 아니라, 내가 멈추지 않고 있다는 증거를 남기는 일이다." },
+      { type: 'text', content: "다음 주 목표: 갤러리 서브그리드 마무리, 인덱스 필터 UI 다듬기. 무리하지 않을 것." },
     ],
     private: false,
     created_at: new Date().toISOString(),
@@ -87,59 +93,63 @@ export const SEED_WORKS: Work[] = [
     title: '아카이브 시스템',
     year: '2026',
     role: '디자인 / 개발',
-    field: '웹',
+    field: 'Web',
     tools: 'Figma · React',
     tag: 'WEB',
     img: 'https://picsum.photos/seed/jh-archive-sys/1200/700',
     description: [
-      "개인 아카이브를 위한 디자인 시스템이자 웹 애플리케이션. 완성작과 습작, 노트와 데일리 로그를 하나의 인덱스로 묶었다.",
-      "OKLCH 기반 팔레트와 8단 그리드를 토대로 다크 테마를 설계했고, 슬라이드업 오버레이로 모든 하위 화면을 한 페이지 안에서 다룬다."
+      { type: 'text', content: "개인 아카이브를 위한 디자인 시스템이자 웹 애플리케이션. 완성작과 습작, 노트와 데일리 로그를 하나의 인덱스로 묶었다." },
+      { type: 'text', content: "OKLCH 기반 팔레트와 8단 그리드를 토대로 다크 테마를 설계했고, 슬라이드업 오버레이로 모든 하위 화면을 한 페이지 안에서 다룬다." },
     ],
-    gallery: ['https://picsum.photos/seed/jh-archive-1/1200/900', 'https://picsum.photos/seed/jh-archive-2/1200/900'],    created_at: new Date().toISOString(),
+    gallery: ['https://picsum.photos/seed/jh-archive-1/1200/900', 'https://picsum.photos/seed/jh-archive-2/1200/900'],
+    created_at: new Date().toISOString(),
   },
   {
     id: 2,
     title: '필드 레코더',
     year: '2025',
     role: '아이덴티티',
-    field: '브랜딩',
+    field: 'Branding',
     tools: 'Glyphs · InDesign',
     tag: 'BRAND',
     img: 'https://picsum.photos/seed/jh-field-rec/1200/700',
     description: [
-      "현장 녹음을 기록하는 작은 레이블을 위한 비주얼 아이덴티티. 모노스페이스 로고타입과 빈티지 필름 톤의 사진 언어로 아날로그적 질감을 끌어냈다.",
-      "명함부터 카세트 인레이까지, 같은 그리드와 색 가족 안에서 변주되도록 시스템을 구성했다."
+      { type: 'text', content: "현장 녹음을 기록하는 작은 레이블을 위한 비주얼 아이덴티티. 모노스페이스 로고타입과 빈티지 필름 톤의 사진 언어로 아날로그적 질감을 끌어냈다." },
+      { type: 'text', content: "명함부터 카세트 인레이까지, 같은 그리드와 색 가족 안에서 변주되도록 시스템을 구성했다." },
     ],
-    gallery: ['https://picsum.photos/seed/jh-field-1/1200/900', 'https://picsum.photos/seed/jh-field-2/1200/900'],    created_at: new Date().toISOString(),
+    gallery: ['https://picsum.photos/seed/jh-field-1/1200/900', 'https://picsum.photos/seed/jh-field-2/1200/900'],
+    created_at: new Date().toISOString(),
   },
   {
     id: 3,
     title: '타입 스페시멘 03',
     year: '2025',
     role: '에디토리얼',
-    field: '출판',
+    field: 'Editorial',
     tools: 'InDesign',
     tag: 'PRINT',
     img: 'https://picsum.photos/seed/jh-type-spec/1200/700',
     description: [
-      "한글 본문 서체를 위한 견본 책자. 행폭과 행간, 크기의 단계를 실제 긴 글 안에서 검증하며 조판 규칙을 정리했다.",
-      "장식을 덜어내고 본문 자체가 주인공이 되도록, 여백과 리듬에 대부분의 시간을 썼다."
+      { type: 'text', content: "한글 본문 서체를 위한 견본 책자. 행폭과 행간, 크기의 단계를 실제 긴 글 안에서 검증하며 조판 규칙을 정리했다." },
+      { type: 'text', content: "장식을 덜어내고 본문 자체가 주인공이 되도록, 여백과 리듬에 대부분의 시간을 썼다." },
     ],
-    gallery: ['https://picsum.photos/seed/jh-type-1/1200/900', 'https://picsum.photos/seed/jh-type-2/1200/900'],    created_at: new Date().toISOString(),
+    gallery: ['https://picsum.photos/seed/jh-type-1/1200/900', 'https://picsum.photos/seed/jh-type-2/1200/900'],
+    created_at: new Date().toISOString(),
   },
   {
     id: 4,
     title: '스튜디오 인덱스',
     year: '2024',
     role: '웹',
-    field: '웹',
+    field: 'Web',
     tools: 'HTML · CSS',
     tag: 'WEB',
     img: 'https://picsum.photos/seed/jh-studio-idx/1200/700',
     description: [
-      "작업을 시간순으로 늘어놓는 가장 단순한 형태의 포트폴리오. 한 페이지, 한 인덱스, 군더더기 없는 항법.",
-      "이후 아카이브 시스템으로 발전하는 출발점이 된 프로젝트다."
+      { type: 'text', content: "작업을 시간순으로 늘어놓는 가장 단순한 형태의 포트폴리오. 한 페이지, 한 인덱스, 군더더기 없는 항법." },
+      { type: 'text', content: "이후 아카이브 시스템으로 발전하는 출발점이 된 프로젝트다." },
     ],
-    gallery: ['https://picsum.photos/seed/jh-studio-1/1200/900', 'https://picsum.photos/seed/jh-studio-2/1200/900'],    created_at: new Date().toISOString(),
+    gallery: ['https://picsum.photos/seed/jh-studio-1/1200/900', 'https://picsum.photos/seed/jh-studio-2/1200/900'],
+    created_at: new Date().toISOString(),
   },
 ]

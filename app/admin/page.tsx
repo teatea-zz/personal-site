@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { ChevronDown, Smile, ExternalLink, Plus } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
 import type { Note, Work } from '@/types/database'
 import { SEED_NOTES, SEED_WORKS } from '@/lib/data'
@@ -12,7 +13,7 @@ type Tab = 'notes' | 'works'
 
 const BG   = '#FDFBF7'
 const INK  = '#231F1A'
-const mono = "'IBM Plex Mono',ui-monospace,monospace"
+const mono = "'Geist',ui-monospace,monospace"
 const suit = "'SUIT Variable',sans-serif"
 
 const DEV_BYPASS =
@@ -28,6 +29,7 @@ export default function AdminPage() {
   const [editWork, setEditWork] = useState<Work | null | 'new'>(null)
   const [userEmail, setUserEmail] = useState(DEV_BYPASS ? 'dev mode' : '')
   const [sortDir, setSortDir] = useState<'recent' | 'oldest'>('recent')
+  const [sortOpen, setSortOpen] = useState(false)
 
   const fetchNotes = useCallback(async () => {
     if (DEV_BYPASS) return
@@ -91,8 +93,8 @@ export default function AdminPage() {
   }
 
   const tabActive: React.CSSProperties = {
-    fontFamily: mono, fontSize: 'var(--fs-btn)' as any, letterSpacing: '.1em',
-    padding: '8px 20px', borderRadius: 13,
+    fontFamily: mono, fontSize: 'var(--fs-btn)' as any,
+    padding: '8px 14px', borderRadius: 13,
     border: '1px solid #ffd270',
     background: '#ffd270', color: INK,
     cursor: 'pointer', transition: '.15s',
@@ -105,7 +107,7 @@ export default function AdminPage() {
   }
 
   const colHead: React.CSSProperties = {
-    fontFamily: mono, fontSize: 'var(--fs-label)' as any, letterSpacing: '.12em',
+    fontFamily: mono, fontSize: 'var(--fs-label)' as any,
     color: 'rgba(35,31,26,.38)', textTransform: 'uppercase',
   }
   const editBtn: React.CSSProperties = {
@@ -120,7 +122,7 @@ export default function AdminPage() {
   }
   const newBtn: React.CSSProperties = {
     background: '#ffd270', color: INK, border: 'none',
-    borderRadius: 13, padding: '8px 20px', fontFamily: mono,
+    borderRadius: 13, padding: '8px 14px', fontFamily: mono,
     fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer',
   }
   const countStyle: React.CSSProperties = {
@@ -139,17 +141,17 @@ export default function AdminPage() {
     sortDir === 'recent' ? b.year.localeCompare(a.year) : a.year.localeCompare(b.year))
 
   return (
-    <div style={{ minHeight: '100svh', background: BG, color: INK }}>
+    <div style={{ minHeight: '100svh', background: BG, color: INK, fontWeight: 400 }}>
 
       {/* Header */}
       <div style={{ borderBottom: `1px solid rgba(35,31,26,.1)`, padding: '14px clamp(16px,3vw,40px)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-          <span style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, letterSpacing: '.16em', color: 'rgba(35,31,26,.4)', flexShrink: 0 }}>ADMIN</span>
+          <Smile size={20} strokeWidth={2} style={{ color: 'rgba(35,31,26,.4)', flexShrink: 0 }} />
           <span style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: 'rgba(35,31,26,.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{userEmail}</span>
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
-          <a href="/" target="_blank" rel="noopener" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, color: 'rgba(35,31,26,.45)', textDecoration: 'none' }}>← Site ↗</a>
-          <button onClick={signOut} style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, letterSpacing: '.08em', padding: '7px 14px', borderRadius: 13, border: `1px solid rgba(35,31,26,.18)`, background: 'transparent', color: 'rgba(35,31,26,.55)', cursor: 'pointer' }}>Sign out</button>
+          <a href="/" target="_blank" rel="noopener" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: '1px solid rgba(35,31,26,.18)', background: 'transparent', color: 'rgba(35,31,26,.55)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>Site <ExternalLink size={16} strokeWidth={1.5} /></a>
+          <button onClick={signOut} style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: `1px solid rgba(35,31,26,.18)`, background: 'transparent', color: 'rgba(35,31,26,.55)', cursor: 'pointer' }}>Sign out</button>
         </div>
       </div>
 
@@ -163,12 +165,27 @@ export default function AdminPage() {
           {((tab === 'notes' && !editNote) || (tab === 'works' && !editWork)) && (
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14 }}>
               <span style={countStyle}>총 {tab === 'notes' ? notes.length : works.length}개의 {tab === 'notes' ? '노트' : '작업'}</span>
-              <select value={sortDir} onChange={e => setSortDir(e.target.value as 'recent' | 'oldest')} style={sortSelect}>
-                <option value="recent">최근등록순</option>
-                <option value="oldest">오래된순</option>
-              </select>
-              <button onClick={() => tab === 'notes' ? setEditNote('new') : setEditWork('new')} style={newBtn}>
-                + New {tab === 'notes' ? 'Note' : 'Work'}
+              <div style={{ position: 'relative' }}>
+                {sortOpen && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setSortOpen(false)} />}
+                <button type="button" onClick={() => setSortOpen(o => !o)}
+                  style={{ ...sortSelect, display: 'flex', alignItems: 'center', gap: 24, paddingRight: 36, position: 'relative' }}>
+                  {sortDir === 'recent' ? '최근등록순' : '오래된순'}
+                  <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${sortOpen ? 180 : 0}deg)`, transition: 'transform .2s', color: 'rgba(35,31,26,.45)' }} />
+                </button>
+                {sortOpen && (
+                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%' }}>
+                    {(['recent', 'oldest'] as const).map(val => (
+                      <button key={val} type="button"
+                        onClick={() => { setSortDir(val); setSortOpen(false) }}
+                        style={{ width: '100%', textAlign: 'left', padding: '10px 16px', fontFamily: suit, fontSize: 'var(--fs-btn)' as any, fontWeight: val === sortDir ? 600 : 400, color: val === sortDir ? INK : 'rgba(35,31,26,.55)', background: val === sortDir ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        {val === 'recent' ? '최근등록순' : '오래된순'}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button onClick={() => tab === 'notes' ? setEditNote('new') : setEditWork('new')} style={{ ...newBtn, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Plus size={16} strokeWidth={1.5} /> New {tab === 'notes' ? 'Note' : 'Work'}
               </button>
             </div>
           )}
@@ -179,7 +196,7 @@ export default function AdminPage() {
           <>
             {editNote ? (
               <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
-                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, letterSpacing: '.14em', color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
+                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
                   {editNote === 'new' ? 'NEW NOTE' : 'EDIT NOTE'}
                 </div>
                 <div style={{ padding: 'clamp(18px,3vw,28px)' as any }}>
@@ -223,7 +240,7 @@ export default function AdminPage() {
           <>
             {editWork ? (
               <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
-                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, letterSpacing: '.14em', color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
+                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
                   {editWork === 'new' ? 'NEW WORK' : 'EDIT WORK'}
                 </div>
                 <div style={{ padding: 'clamp(18px,3vw,28px)' as any }}>

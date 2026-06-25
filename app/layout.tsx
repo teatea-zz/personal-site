@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Jiwoo Han',
+  title: 'Jihyun Kim',
   description: '디자이너이자 영원한 학생 — 포트폴리오 + 노트',
 }
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowLeft } from 'lucide-react'
 import type { Work } from '@/types/database'
 
 const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
@@ -19,17 +20,19 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
         style={{
           border: '1px solid rgba(255,255,255,.22)',
           color: '#f4f4f1',
-          fontFamily: "'IBM Plex Mono',ui-monospace,monospace",
-          fontSize: 11,
-          letterSpacing: '.06em',
+          fontFamily: "'Geist',ui-monospace,monospace",
+          fontSize: 12,
           textTransform: 'uppercase',
           padding: '8px 16px',
           borderRadius: 8,
           cursor: 'pointer',
           transition: '.16s',
           marginBottom: 22,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
         }}
-      >← Work</button>
+      ><ArrowLeft size={16} strokeWidth={1.5} />Work</button>
 
       <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 12, border: '1px solid rgba(255,255,255,.1)', background: '#1a1a1a' }}>
         <div style={{ width: '100%', height: '100%', backgroundImage: `url("${work.img}")`, backgroundSize: 'cover', backgroundPosition: 'center', filter: IMG_FILTER }} />
@@ -48,17 +51,27 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
           { label: 'Tools', val: work.tools },
         ].map(({ label, val }) => (
           <div key={label} style={{ background: '#101010', padding: '14px 16px' }}>
-            <div style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 9.5, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(244,244,241,.4)' }}>{label}</div>
-            <div style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 14, fontWeight: 500, marginTop: 5, color: '#eee' }}>{val}</div>
+            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, textTransform: 'uppercase', color: 'rgba(244,244,241,.4)' }}>{label}</div>
+            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, fontWeight: 500, marginTop: 5, color: '#eee' }}>{val}</div>
           </div>
         ))}
       </div>
 
-      {work.description.map((p, i) => (
-        <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: '64ch' }}>{p}</p>
-      ))}
+      {work.description.map((block: any, i) => {
+        if (typeof block === 'string') return (
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 920 }}>{block}</p>
+        )
+        if (block.type === 'image') return (
+          <div key={i} style={{ margin: '24px 0' }}>
+            <img src={block.url} alt={block.alt || ''} style={{ width: '100%', maxWidth: 920, borderRadius: 10, display: 'block' }} />
+          </div>
+        )
+        return (
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 920 }}>{block.content}</p>
+        )
+      })}
 
-      <div style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(244,244,241,.4)', margin: '28px 0 12px' }}>Gallery — tap to enlarge</div>
+      <div style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, textTransform: 'uppercase', color: 'rgba(244,244,241,.4)', margin: '28px 0 12px' }}>Gallery — tap to enlarge</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,280px),1fr))', gap: 14 }}>
         {work.gallery.map((src, i) => (
           <button key={i} onClick={() => onLightbox(src)} style={{ width: '100%', padding: 0, border: 0, cursor: 'zoom-in', display: 'block', background: 'transparent' }}>

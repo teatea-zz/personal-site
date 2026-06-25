@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -89,8 +89,8 @@ button { background-color: transparent; }
 }
 
 /* Center 정렬 — Notes: Date·Type·Order / Works: Role·Year·Order (헤더·값 동시) */
-.adm-notes-head > :nth-child(1), .adm-notes-row > :nth-child(1),
-.adm-notes-head > :nth-child(3), .adm-notes-row > :nth-child(3) { text-align: center; }
+.adm-works-head > :nth-child(3), .adm-works-row > :nth-child(3),
+.adm-works-head > :nth-child(4), .adm-works-row > :nth-child(4) { text-align: center; }
 .adm-works-head > :nth-child(3), .adm-works-row > :nth-child(3),
 .adm-works-head > :nth-child(4), .adm-works-row > :nth-child(4) { text-align: center; }
 /* 액션 버튼(Edit/Del)은 우측 정렬 */
@@ -119,29 +119,32 @@ button { background-color: transparent; }
 
   .adm-notes-head { display: none; }
   .adm-notes-row {
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "title actions" "meta  actions";
-    row-gap: 4px; column-gap: 12px;
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: none;
+    row-gap: 0; column-gap: 10px;
+    align-items: center;
   }
   .adm-notes-row .adm-col-date   { display: none; }
-  .adm-notes-row .adm-col-title  { grid-area: title; }
-  .adm-notes-row .adm-col-type   { grid-area: meta; }
+  .adm-notes-row .adm-col-title  { grid-area: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .adm-notes-row .adm-col-type   { grid-area: auto; }
   .adm-notes-row .adm-col-order  { display: none; }
-  .adm-notes-row .adm-col-actions{ grid-area: actions; align-self: center; }
+  .adm-notes-row .adm-col-actions{ grid-area: auto; align-self: center; }
 
   .adm-works-head { display: none; }
   .adm-works-row {
     grid-template-columns: 48px 1fr auto;
+    grid-template-rows: auto auto;
     grid-template-areas: "thumb title   actions"
                          "thumb role    actions";
-    row-gap: 4px; column-gap: 12px;
+    row-gap: 4px; column-gap: 10px;
+    align-items: start;
   }
-  .adm-works-row .adm-col-thumb  { grid-area: thumb; }
-  .adm-works-row .adm-col-title  { grid-area: title; }
-  .adm-works-row .adm-col-role   { grid-area: role; }
+  .adm-works-row .adm-col-thumb  { grid-area: thumb; grid-row: 1 / 3; align-self: center; }
+  .adm-works-row .adm-col-title  { grid-area: title; align-self: end; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .adm-works-row .adm-col-role   { grid-area: role; align-self: start; }
   .adm-works-row .adm-col-year   { display: none; }
   .adm-works-row .adm-col-order  { display: none; }
-  .adm-works-row .adm-col-actions{ grid-area: actions; align-self: center; }
+  .adm-works-row .adm-col-actions{ grid-area: actions; grid-row: 1 / 3; align-self: center; }
 
   .adm-form-grid2   { grid-template-columns: 1fr; }
   .adm-form-grid3   { grid-template-columns: 1fr 1fr; }

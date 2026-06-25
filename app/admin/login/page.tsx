@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Smile } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
 
 const ADMIN_ID = process.env.NEXT_PUBLIC_ADMIN_ID ?? 'admin'
 
 const BG   = '#FDFBF7'
 const INK  = '#231F1A'
-const mono = "'IBM Plex Mono',ui-monospace,monospace"
+const mono = "'Geist',ui-monospace,monospace"
 const suit = "'SUIT Variable',sans-serif"
 
 export default function LoginPage() {
@@ -48,7 +49,8 @@ export default function LoginPage() {
     padding: '10px 14px',
     color: INK,
     fontFamily: suit,
-    fontSize: 'clamp(14px,1vw,16px)' as any,
+    fontSize: 14,
+    fontWeight: 400,
     outline: 'none',
     marginBottom: 16,
   }
@@ -56,17 +58,20 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100svh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ width: '100%', maxWidth: 360, background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, padding: 'clamp(24px,5vw,32px)' as any, boxShadow: '0 4px 24px rgba(35,31,26,.07)' }}>
-        <div style={{ fontFamily: mono, fontSize: 'clamp(9px,0.66vw,10.5px)' as any, letterSpacing: '.16em', color: `rgba(35,31,26,.4)`, marginBottom: 24 }}>ADMIN · JIWOO HAN</div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+          <Smile size={24} strokeWidth={1.5} style={{ color: '#231F1A' }} />
+          <div style={{ fontFamily: mono, fontSize: 28, fontWeight: 400, color: '#231F1A', textAlign: 'center' }}>ADMIN · HYUN</div>
+        </div>
         <form onSubmit={handleSubmit}>
-          {error && <div style={{ fontFamily: suit, fontSize: 13, color: '#c0392b', marginBottom: 16 }}>{error}</div>}
-          <label style={{ fontFamily: mono, fontSize: 'clamp(9px,0.63vw,10px)' as any, letterSpacing: '.14em', textTransform: 'uppercase', color: `rgba(35,31,26,.45)`, display: 'block', marginBottom: 6 }}>ID</label>
+          {error && <div style={{ fontFamily: suit, fontSize: 13, fontWeight: 400, color: '#c0392b', marginBottom: 16 }}>{error}</div>}
+          <label style={{ fontFamily: mono, fontSize: 14, fontWeight: 400, color: `rgba(35,31,26,.45)`, display: 'block', marginBottom: 6 }}>ID</label>
           <input style={inputStyle} type="text" value={id} onChange={e => setId(e.target.value)} required autoFocus autoComplete="username" />
-          <label style={{ fontFamily: mono, fontSize: 'clamp(9px,0.63vw,10px)' as any, letterSpacing: '.14em', textTransform: 'uppercase', color: `rgba(35,31,26,.45)`, display: 'block', marginBottom: 6 }}>Password</label>
+          <label style={{ fontFamily: mono, fontSize: 14, fontWeight: 400, color: `rgba(35,31,26,.45)`, display: 'block', marginBottom: 6 }}>Password</label>
           <input style={inputStyle} type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" />
           <button
             type="submit"
             disabled={loading}
-            style={{ width: '100%', background: '#ffd270', color: INK, border: 'none', borderRadius: 13, padding: 12, fontFamily: mono, fontSize: 'clamp(11px,0.75vw,12px)' as any, fontWeight: 600, letterSpacing: '.08em', cursor: 'pointer' }}
+            style={{ width: '100%', background: '#ffd270', color: INK, border: 'none', borderRadius: 13, padding: 12, fontFamily: mono, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>

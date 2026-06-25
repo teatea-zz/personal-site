@@ -31,7 +31,7 @@ export default function AboutSection() {
             { label: 'NOW', val: '인터랙션 공부 중' },
           ].map(({ label, val }, i, arr) => (
             <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '12px 0', borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,.1)' : undefined }}>
-              <span style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", color: 'rgba(244,244,241,.45)', fontSize: 10.5, letterSpacing: '.1em' }}>{label}</span>
+              <span style={{ fontFamily: "'Geist',ui-monospace,monospace", color: 'rgba(244,244,241,.45)', fontSize: 12 }}>{label}</span>
               <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13, fontWeight: 600, color: '#eee' }}>{val}</span>
             </div>
           ))}

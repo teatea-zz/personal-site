@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { CircleX } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
-import type { Work } from '@/types/database'
+import type { Work, TextBlock } from '@/types/database'
 
 const INK  = '#231F1A'
-const mono = "'IBM Plex Mono',ui-monospace,monospace"
+const mono = "'Geist',ui-monospace,monospace"
 const suit = "'SUIT Variable',sans-serif"
 
 type FormData = {
@@ -22,15 +23,20 @@ type FormData = {
 
 function workToForm(work?: Partial<Work>): FormData {
   return {
-    title:      work?.title      ?? '',
-    year:       work?.year       ?? '',
-    role:       work?.role       ?? '',
-    field:      work?.field      ?? '',
-    tools:      work?.tools      ?? '',
-    tag:        work?.tag        ?? '',
-    img:        work?.img        ?? '',
-    desc:       (work?.description ?? []).join('\n\n'),
-    gallery:    (work?.gallery   ?? []).join('\n'),
+    title:   work?.title   ?? '',
+    year:    work?.year    ?? '',
+    role:    work?.role    ?? '',
+    field:   work?.field   ?? '',
+    tools:   work?.tools   ?? '',
+    tag:     work?.tag     ?? '',
+    img:     work?.img     ?? '',
+    desc:    (work?.description ?? []).map((b: any) => {
+      if (typeof b === 'string') {
+        try { const p = JSON.parse(b); return p.type === 'text' ? p.content : null } catch { return b }
+      }
+      return b.type === 'text' ? b.content : null
+    }).filter(Boolean).join('\n\n'),
+    gallery: (work?.gallery ?? []).join('\n'),
   }
 }
 
@@ -49,14 +55,14 @@ const inp: React.CSSProperties = {
   color: INK,
   fontFamily: suit,
   fontSize: 'var(--fs-input)' as any,
+  fontWeight: 400,
   outline: 'none',
   marginBottom: 14,
 }
 const lbl: React.CSSProperties = {
   fontFamily: suit,
   fontSize: 'var(--fs-label)' as any,
-  letterSpacing: '.12em',
-  textTransform: 'uppercase',
+  fontWeight: 400,
   color: 'rgba(35,31,26,.45)',
   display: 'block',
   marginBottom: 5,
@@ -125,7 +131,7 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
       tools:       form.tools,
       tag:         form.tag,
       img:         form.img,
-      description: form.desc.split(/\n{2,}/).map(p => p.trim()).filter(Boolean),
+      description: form.desc.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
       gallery:     form.gallery.split('\n').map(u => u.trim()).filter(Boolean),
     })
     setSaving(false)
@@ -160,8 +166,13 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
           <input ref={heroRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleHeroUpload} />
         </div>
         {form.img && (
-          <div style={{ aspectRatio: '16/7', overflow: 'hidden', borderRadius: 13, background: 'rgba(35,31,26,.06)', marginBottom: 14 }}>
+          <div style={{ position: 'relative', aspectRatio: '16/7', overflow: 'hidden', borderRadius: 13, background: 'rgba(35,31,26,.06)', marginBottom: 14 }}>
             <img src={form.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <button type="button"
+              onClick={() => setForm(f => ({ ...f, img: '' }))}
+              style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
+              <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
+            </button>
           </div>
         )}
       </div>
@@ -178,7 +189,9 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
             <img src={url} alt="" style={{ width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)' }} />
             <button type="button"
               onClick={() => setForm(f => ({ ...f, gallery: f.gallery.split('\n').filter((_, j) => j !== i).join('\n') }))}
-              style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', background: '#c0392b', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+              style={{ position: 'absolute', top: -10, right: -10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
+              <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
+            </button>
           </div>
         ))}
         <button type="button" onClick={() => galleryRef.current?.click()} disabled={uploadingGallery}

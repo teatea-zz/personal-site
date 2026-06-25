@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { SEED_NOTES, SEED_WORKS } from '@/lib/data'
 import SiteClient from '@/components/SiteClient'
 

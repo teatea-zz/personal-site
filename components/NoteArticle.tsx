@@ -1,8 +1,9 @@
 'use client'
 
+import { ArrowLeft } from 'lucide-react'
 import type { Note } from '@/types/database'
 
-const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log' }
+const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log', '회고': 'Retro', '일상': 'Daily' }
 
 interface Props {
   note: Note
@@ -15,10 +16,28 @@ export default function NoteArticle({ note, noteNum, onOpenIndex }: Props) {
 
   return (
     <article style={{ maxWidth: 720, margin: '0 auto' }}>
-      <div style={{ fontSize: 11, color: 'rgba(244,244,241,.46)', display: 'flex', alignItems: 'baseline', gap: 0 }}>
-        <span style={{ fontFamily: "'IBM Plex Mono',ui-monospace,monospace", letterSpacing: '.1em' }}>
-          {note.date} · {typeEn}
-        </span>
+      <button
+        onClick={onOpenIndex}
+        className="hover-accent"
+        style={{
+          marginBottom: 22,
+          border: '1px solid rgba(255,255,255,.22)',
+          color: '#f4f4f1',
+          fontFamily: "'Geist',ui-monospace,monospace",
+          fontSize: 12,
+          textTransform: 'uppercase',
+          padding: '8px 18px',
+          borderRadius: 8,
+          cursor: 'pointer',
+          transition: '.16s',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+        }}
+      ><ArrowLeft size={16} strokeWidth={1.5} />Index</button>
+
+      <div style={{ fontSize: 12, color: 'rgba(244,244,241,.46)', display: 'flex', alignItems: 'baseline', gap: 0 }}>
+        <span style={{ fontFamily: "'Geist',ui-monospace,monospace" }}>{note.date} · {typeEn}</span>
         {note.private && (
           <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontWeight: 600, letterSpacing: '.01em' }}> · 비공개</span>
         )}
@@ -27,26 +46,19 @@ export default function NoteArticle({ note, noteNum, onOpenIndex }: Props) {
         {note.title}
       </h2>
       <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, color: 'rgba(244,244,241,.52)', marginBottom: 26 }}>{note.sub}</div>
-      {note.body.map((p, i) => (
-        <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: '64ch' }}>{p}</p>
-      ))}
-      <button
-        onClick={onOpenIndex}
-        className="hover-accent"
-        style={{
-          marginTop: 14,
-          border: '1px solid rgba(255,255,255,.22)',
-          color: '#f4f4f1',
-          fontFamily: "'IBM Plex Mono',ui-monospace,monospace",
-          fontSize: 11,
-          letterSpacing: '.06em',
-          textTransform: 'uppercase',
-          padding: '8px 18px',
-          borderRadius: 8,
-          cursor: 'pointer',
-          transition: '.16s',
-        }}
-      >← Index</button>
+      {note.body.map((block: any, i) => {
+        if (typeof block === 'string') return (
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block}</p>
+        )
+        if (block.type === 'image') return (
+          <div key={i} style={{ margin: '24px 0' }}>
+            <img src={block.url} alt={block.alt || ''} style={{ maxWidth: '100%', height: 'auto', borderRadius: 10, display: 'block' }} />
+          </div>
+        )
+        return (
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block.content}</p>
+        )
+      })}
     </article>
   )
 }
