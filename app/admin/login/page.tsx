@@ -71,7 +71,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{ width: '100%', background: '#ffd270', color: INK, border: 'none', borderRadius: 13, padding: 12, fontFamily: mono, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+            style={{ width: '100%', background: '#FFD270', color: INK, border: 'none', borderRadius: 13, padding: 12, fontFamily: mono, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>

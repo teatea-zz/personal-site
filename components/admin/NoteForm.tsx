@@ -201,7 +201,7 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
         </label>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
           <button type="submit" disabled={saving}
-            style={{ background: '#ffd270', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
+            style={{ background: '#FFD270', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
             {saving ? 'Saving…' : (initial ? 'Update' : 'Create')}
           </button>
           <button type="button" onClick={onCancel}

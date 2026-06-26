@@ -6,10 +6,10 @@ import HomeCard from './HomeCard'
 import Sheet from './Sheet'
 import Lightbox from './Lightbox'
 import SocialBar from './SocialBar'
+import GradientBackground from './GradientBackground'
 
 type View = 'work' | 'project' | 'note' | 'about' | 'contact' | 'index' | null
 
-const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
 
 interface Props {
   notes: Note[]
@@ -39,15 +39,7 @@ export default function SiteClient({ notes, works }: Props) {
         justifyContent: 'flex-start',
         padding: 'clamp(16px,3vw,40px)',
       }}>
-        {/* Background image */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: "url('https://picsum.photos/seed/jiwoo-field-mist-7/1900/1200')",
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          filter: IMG_FILTER, zIndex: 0,
-        }} />
-        {/* Gradient overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(8,8,8,.62) 0%, rgba(8,8,8,.12) 38%, rgba(8,8,8,.66) 100%)', zIndex: 1 }} />
+        <GradientBackground />
         {/* Grain overlay */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', mixBlendMode: 'overlay', opacity: .15,

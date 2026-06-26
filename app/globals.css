@@ -6,7 +6,7 @@ html, body { margin: 0; padding: 0; background: #0c0c0c; }
 body { font-family: 'SUIT Variable', -apple-system, sans-serif; }
 button { background-color: transparent; }
 
-::selection { background: #ffd270; color: #0e0e0e; }
+::selection { background: #FFD270; color: #0e0e0e; }
 
 *::-webkit-scrollbar { width: 9px; height: 9px; }
 *::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 9px; }
@@ -14,7 +14,7 @@ button { background-color: transparent; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 :root {
-  --accent: #ffd270;
+  --accent: #FFD270;
   --accent-fg: #0e0e0e;
 
   /* Admin 폰트 — 데스크톱 ≥1600px */

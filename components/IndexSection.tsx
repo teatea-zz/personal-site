@@ -32,9 +32,9 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
   }
   const tabActive: React.CSSProperties = {
     ...tabBase,
-    background: 'var(--accent,#ffd270)',
+    background: 'var(--accent,#FFD270)',
     color: 'var(--accent-fg,#0e0e0e)',
-    border: '1px solid var(--accent,#ffd270)',
+    border: '1px solid var(--accent,#FFD270)',
   }
 
   return (

@@ -53,7 +53,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, onClos
       WebkitBackdropFilter: 'blur(26px) saturate(1.1)',
       borderTop: '1px solid rgba(255,255,255,.14)',
       borderRadius: '18px 18px 0 0',
-      boxShadow: '0 -34px 100px -20px rgba(0,0,0,.85)',
+      boxShadow: open ? '0 -34px 100px -20px rgba(0,0,0,.85)' : 'none',
       display: 'flex',
       flexDirection: 'column',
       transform: open ? 'translateY(0%)' : 'translateY(101%)',

@@ -95,8 +95,8 @@ export default function AdminPage() {
   const tabActive: React.CSSProperties = {
     fontFamily: mono, fontSize: 'var(--fs-btn)' as any,
     padding: '8px 14px', borderRadius: 13,
-    border: '1px solid #ffd270',
-    background: '#ffd270', color: INK,
+    border: '1px solid #FFD270',
+    background: '#FFD270', color: INK,
     cursor: 'pointer', transition: '.15s',
   }
   const tabIdle: React.CSSProperties = {
@@ -121,7 +121,7 @@ export default function AdminPage() {
     color: '#c0392b',
   }
   const newBtn: React.CSSProperties = {
-    background: '#ffd270', color: INK, border: 'none',
+    background: '#FFD270', color: INK, border: 'none',
     borderRadius: 13, padding: '8px 14px', fontFamily: mono,
     fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer',
   }

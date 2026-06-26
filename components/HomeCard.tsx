@@ -32,9 +32,9 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
         <h1 style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontWeight: 700, fontSize: 'clamp(50px,17.5vw,96px)', lineHeight: 1, letterSpacing: '-.045em', margin: '14px 0 0', whiteSpace: 'nowrap', color: '#f6f6f3' }}>Jihyun Kim</h1>
 
         <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13.5, fontWeight: 400, lineHeight: 1.65, color: 'rgba(244,244,241,.66)', margin: '16px 0 2px', maxWidth: '44ch' }}>
-          디자이너이자 영원한 학생.<br />
-          완성한 작업 곁에 습작과 초고, 매일의 기록을 함께 둡니다<br />
-          — 원래 그렇게 만들어지니까요.
+          UX/UI Designer, Builder<br />
+          에이전트 코딩으로, 프론트엔드 구현까지 함께 만들어갑니다.<br />
+          ㅡ 첫 정식 서비스: SamePage '우리는 지금 같은 페이지에 있네요'
         </p>
 
         <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,.1)' }}>
