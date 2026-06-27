@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Smile } from 'lucide-react'
+import Image from 'next/image'
 import { supabaseBrowser } from '@/lib/supabase-browser'
 
 const ADMIN_ID = process.env.NEXT_PUBLIC_ADMIN_ID ?? 'admin'
@@ -58,9 +58,8 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100svh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ width: '100%', maxWidth: 360, background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, padding: 'clamp(24px,5vw,32px)' as any, boxShadow: '0 4px 24px rgba(35,31,26,.07)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-          <Smile size={24} strokeWidth={1.5} style={{ color: '#231F1A' }} />
-          <div style={{ fontFamily: mono, fontSize: 28, fontWeight: 400, color: '#231F1A', textAlign: 'center' }}>ADMIN · HYUN</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <Image src="/admin_logo.svg" alt="Admin Logo" width={140} height={47} priority />
         </div>
         <form onSubmit={handleSubmit}>
           {error && <div style={{ fontFamily: suit, fontSize: 13, fontWeight: 400, color: '#c0392b', marginBottom: 16 }}>{error}</div>}

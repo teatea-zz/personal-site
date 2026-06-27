@@ -84,9 +84,7 @@ const uploadBtn: React.CSSProperties = {
 export default function NoteForm({ initial, onSave, onCancel }: Props) {
   const [form, setForm]   = useState<FormData>(noteToForm(initial))
   const [typeOpen, setTypeOpen] = useState(false)
-  const [images, setImages] = useState<string[]>(
-    (initial?.body ?? []).filter((b: any) => typeof b !== 'string' && b.type === 'image').map((b: any) => b.url)
-  )
+  const [images, setImages] = useState<string[]>(initial?.images ?? [])
   const [saving, setSaving]               = useState(false)
   const [uploadingImages, setUploadingImages] = useState(false)
   const imagesRef = useRef<HTMLInputElement>(null)
@@ -94,6 +92,15 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
   const set = (k: keyof FormData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm(f => ({ ...f, [k]: e.target.value }))
+
+  async function removeImage(url: string) {
+    // Supabase Storage에서 파일 삭제
+    try {
+      const path = url.split('/notes/')[1]
+      if (path) await supabaseBrowser.storage.from('notes').remove([path])
+    } catch { /* URL이 외부 URL이면 무시 */ }
+    setImages(imgs => imgs.filter(u => u !== url))
+  }
 
   async function handleImagesUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
@@ -120,10 +127,8 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
       date:    form.date,
       title:   form.title,
       sub:     form.sub,
-      body: [
-        ...form.body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
-        ...images.map(url => ({ type: 'image' as const, url })),
-      ],
+      body:    form.body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
+      images,
       private: form.private,
     })
     setSaving(false)
@@ -178,7 +183,7 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
           <div key={i} style={{ position: 'relative' }}>
             <img src={url} alt="" style={{ width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)' }} />
             <button type="button"
-              onClick={() => setImages(imgs => imgs.filter((_, j) => j !== i))}
+              onClick={() => removeImage(url)}
               style={{ position: 'absolute', top: -10, right: -10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
               <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
             </button>

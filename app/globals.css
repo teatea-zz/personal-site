@@ -60,6 +60,16 @@ button { background-color: transparent; }
 .gallery-img { transition: transform 0.5s; }
 .gallery-img:hover { transform: scale(1.04); }
 
+/* ── Admin header ── */
+.adm-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12; }
+.adm-header-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 720px) {
+  .adm-header { grid-template-columns: auto 1fr; }
+  .adm-header-email { display: none; }
+  .adm-header img { height: 28px !important; width: auto !important; }
+}
+
 /* ── Admin responsive ── */
 .adm-notes-head {
   display: grid;

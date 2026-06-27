@@ -12,9 +12,20 @@ create table if not exists notes (
   title       text    not null,
   sub         text    not null default '',
   body        jsonb   not null default '[]',
+  images      text[]  not null default '{}',
   private     boolean not null default false,
   created_at  timestamptz not null default now()
 );
+
+-- 기존 테이블에 images 컬럼이 없으면 추가
+do $$ begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'notes' and column_name = 'images'
+  ) then
+    alter table notes add column images text[] not null default '{}';
+  end if;
+end $$;
 
 create table if not exists works (
   id          bigint generated always as identity primary key,

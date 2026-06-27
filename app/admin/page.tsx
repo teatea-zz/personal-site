@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronDown, Smile, ExternalLink, Plus } from 'lucide-react'
+import Image from 'next/image'
+import { ChevronDown, ExternalLink, Plus } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
 import type { Note, Work } from '@/types/database'
 import { SEED_NOTES, SEED_WORKS } from '@/lib/data'
@@ -71,6 +72,12 @@ export default function AdminPage() {
 
   async function deleteNote(id: number) {
     if (!confirm('삭제할까요?')) return
+    const note = notes.find(n => n.id === id)
+    if (note) {
+      const imageUrls = (note.body ?? []).filter((b: any) => b.type === 'image').map((b: any) => b.url)
+      const paths = imageUrls.map((url: string) => url.split('/notes/')[1]).filter(Boolean)
+      if (paths.length) await supabaseBrowser.storage.from('notes').remove(paths)
+    }
     await supabaseBrowser.from('notes').delete().eq('id', id)
     await fetchNotes()
   }
@@ -88,6 +95,12 @@ export default function AdminPage() {
 
   async function deleteWork(id: number) {
     if (!confirm('삭제할까요?')) return
+    const work = works.find(w => w.id === id)
+    if (work) {
+      const urls = [work.img, ...(work.gallery ?? [])].filter(Boolean)
+      const paths = urls.map((url: string) => url.split('/works/')[1]).filter(Boolean)
+      if (paths.length) await supabaseBrowser.storage.from('works').remove(paths)
+    }
     await supabaseBrowser.from('works').delete().eq('id', id)
     await fetchWorks()
   }
@@ -144,12 +157,10 @@ export default function AdminPage() {
     <div style={{ minHeight: '100svh', background: BG, color: INK, fontWeight: 400 }}>
 
       {/* Header */}
-      <div style={{ borderBottom: `1px solid rgba(35,31,26,.1)`, padding: '14px clamp(16px,3vw,40px)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-          <Smile size={20} strokeWidth={2} style={{ color: 'rgba(35,31,26,.4)', flexShrink: 0 }} />
-          <span style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: 'rgba(35,31,26,.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{userEmail}</span>
-        </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+      <div className="adm-header" style={{ borderBottom: `1px solid rgba(35,31,26,.1)`, padding: '14px clamp(16px,3vw,40px)' }}>
+        <span className="adm-header-email" style={{ fontFamily: suit, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)' }}>{userEmail}</span>
+        <Image src="/admin_header_logo.svg" alt="Admin Logo" width={184} height={32} priority />
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'flex-end', flexShrink: 0 }}>
           <a href="/" target="_blank" rel="noopener" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: '1px solid rgba(35,31,26,.18)', background: 'transparent', color: 'rgba(35,31,26,.55)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>Site <ExternalLink size={16} strokeWidth={1.5} /></a>
           <button onClick={signOut} style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: `1px solid rgba(35,31,26,.18)`, background: 'transparent', color: 'rgba(35,31,26,.55)', cursor: 'pointer' }}>Sign out</button>
         </div>

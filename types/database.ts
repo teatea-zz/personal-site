@@ -9,6 +9,7 @@ export type Note = {
   title: string
   sub: string
   body: Block[]
+  images: string[]
   private: boolean
   created_at: string
 }

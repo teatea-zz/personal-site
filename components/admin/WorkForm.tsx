@@ -80,6 +80,13 @@ const uploadBtn: React.CSSProperties = {
   whiteSpace: 'nowrap',
 }
 
+async function deleteFromStorage(bucket: 'works', url: string) {
+  try {
+    const path = url.split(`/${bucket}/`)[1]
+    if (path) await supabaseBrowser.storage.from(bucket).remove([path])
+  } catch { /* 외부 URL이면 무시 */ }
+}
+
 async function uploadImage(file: File): Promise<string> {
   const ext  = file.name.split('.').pop()
   const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
@@ -169,7 +176,7 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
           <div style={{ position: 'relative', aspectRatio: '16/7', overflow: 'hidden', borderRadius: 13, background: 'rgba(35,31,26,.06)', marginBottom: 14 }}>
             <img src={form.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button type="button"
-              onClick={() => setForm(f => ({ ...f, img: '' }))}
+              onClick={async () => { await deleteFromStorage('works', form.img); setForm(f => ({ ...f, img: '' })) }}
               style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
               <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
             </button>
@@ -188,7 +195,7 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
           <div key={i} style={{ position: 'relative' }}>
             <img src={url} alt="" style={{ width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)' }} />
             <button type="button"
-              onClick={() => setForm(f => ({ ...f, gallery: f.gallery.split('\n').filter((_, j) => j !== i).join('\n') }))}
+              onClick={async () => { await deleteFromStorage('works', url); setForm(f => ({ ...f, gallery: f.gallery.split('\n').filter((_, j) => j !== i).join('\n') })) }}
               style={{ position: 'absolute', top: -10, right: -10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
               <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
             </button>

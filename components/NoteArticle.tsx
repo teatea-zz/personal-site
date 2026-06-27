@@ -50,15 +50,17 @@ export default function NoteArticle({ note, noteNum, onOpenIndex }: Props) {
         if (typeof block === 'string') return (
           <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block}</p>
         )
-        if (block.type === 'image') return (
-          <div key={i} style={{ margin: '24px 0' }}>
-            <img src={block.url} alt={block.alt || ''} style={{ maxWidth: '100%', height: 'auto', borderRadius: 10, display: 'block' }} />
-          </div>
-        )
         return (
           <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block.content}</p>
         )
       })}
+      {(note.images ?? []).length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24, alignItems: 'flex-start' }}>
+          {(note.images ?? []).map((url: string, i: number) => (
+            <img key={i} src={url} alt="" style={{ maxWidth: '100%', height: 'auto', borderRadius: 10, display: 'block' }} />
+          ))}
+        </div>
+      )}
     </article>
   )
 }
