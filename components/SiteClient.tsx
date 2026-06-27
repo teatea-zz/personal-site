@@ -7,6 +7,10 @@ import Sheet from './Sheet'
 import Lightbox from './Lightbox'
 import SocialBar from './SocialBar'
 import GradientBackground from './GradientBackground'
+import BreathVisual from './BreathVisual'
+import BreathVisual2 from './BreathVisual2'
+import BreathVisual3 from './BreathVisual3'
+import BreathVisual4 from './BreathVisual4'
 
 type View = 'work' | 'project' | 'note' | 'about' | 'contact' | 'index' | null
 
@@ -40,6 +44,10 @@ export default function SiteClient({ notes, works }: Props) {
         padding: 'clamp(16px,3vw,40px)',
       }}>
         <GradientBackground />
+        <BreathVisual />
+        <BreathVisual2 />
+        <BreathVisual3 />
+        <BreathVisual4 />
         {/* Grain overlay */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', mixBlendMode: 'overlay', opacity: .15,
