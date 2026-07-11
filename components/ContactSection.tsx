@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowUpRight } from 'lucide-react'
+import { T } from '@/lib/theme'
 
 export default function ContactSection() {
   const links = [
@@ -11,7 +12,7 @@ export default function ContactSection() {
 
   return (
     <div style={{ maxWidth: 760, margin: '0 auto' }}>
-      <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 400, lineHeight: 1.7, color: 'rgba(244,244,241,.55)', margin: '0 0 26px', maxWidth: '40ch' }}>
+      <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 400, lineHeight: 1.7, color: T.textDim, margin: '0 0 26px', maxWidth: '40ch' }}>
         함께 일하거나, 노트를 나누거나, 느린 편지를 — 편하게 인사 건네 주세요.
       </p>
       {links.map(({ label, handle, href }) => (
@@ -26,10 +27,10 @@ export default function ContactSection() {
             justifyContent: 'space-between',
             alignItems: 'baseline',
             gap: 16,
-            borderBottom: '1px solid rgba(255,255,255,.14)',
+            borderBottom: `1px solid ${T.hairlineStrong}`,
             padding: '18px 14px',
             textDecoration: 'none',
-            color: '#f4f4f1',
+            color: T.text,
             transition: '.18s',
           }}
         >

@@ -1,15 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css');
 
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #0c0c0c; }
+/* 다크 모드 복원 시: background: #0c0c0c (lib/theme.ts MODE와 함께 변경) */
+html, body { margin: 0; padding: 0; background: #FDFBF7; }
 body { font-family: 'SUIT Variable', -apple-system, sans-serif; }
 button { background-color: transparent; }
 
-::selection { background: #FFD270; color: #0e0e0e; }
+::selection { background: var(--accent); color: var(--accent-fg); }
 
 *::-webkit-scrollbar { width: 9px; height: 9px; }
-*::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 9px; }
+/* 다크 모드 복원 시: background: rgba(255,255,255,.18) */
+*::-webkit-scrollbar-thumb { background: rgba(35,31,26,.22); border-radius: 9px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
@@ -19,7 +21,7 @@ button { background-color: transparent; }
 }
 
 :root {
-  --accent: #FFD270;
+  --accent: #FFDE79;
   --accent-fg: #0e0e0e;
 
   /* Admin 폰트 — 데스크톱 ≥1600px */

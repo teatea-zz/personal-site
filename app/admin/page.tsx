@@ -74,7 +74,8 @@ export default function AdminPage() {
     if (!confirm('삭제할까요?')) return
     const note = notes.find(n => n.id === id)
     if (note) {
-      const imageUrls = (note.body ?? []).filter((b: any) => b.type === 'image').map((b: any) => b.url)
+      const bodyUrls = (note.body ?? []).filter((b: any) => b.type === 'image').map((b: any) => b.url)
+      const imageUrls = [...bodyUrls, ...(note.images ?? [])]
       const paths = imageUrls.map((url: string) => url.split('/notes/')[1]).filter(Boolean)
       if (paths.length) await supabaseBrowser.storage.from('notes').remove(paths)
     }
@@ -108,8 +109,8 @@ export default function AdminPage() {
   const tabActive: React.CSSProperties = {
     fontFamily: mono, fontSize: 'var(--fs-btn)' as any,
     padding: '8px 14px', borderRadius: 13,
-    border: '1px solid #FFD270',
-    background: '#FFD270', color: INK,
+    border: '1px solid var(--accent)',
+    background: 'var(--accent)', color: INK,
     cursor: 'pointer', transition: 'background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out',
   }
   const tabIdle: React.CSSProperties = {
@@ -134,7 +135,7 @@ export default function AdminPage() {
     color: '#c0392b',
   }
   const newBtn: React.CSSProperties = {
-    background: '#FFD270', color: INK, border: 'none',
+    background: 'var(--accent)', color: INK, border: 'none',
     borderRadius: 13, padding: '8px 14px', fontFamily: mono,
     fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer',
   }

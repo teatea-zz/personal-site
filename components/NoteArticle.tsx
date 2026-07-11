@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import type { Note } from '@/types/database'
+import { T } from '@/lib/theme'
 
 const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log', '회고': 'Retro', '일상': 'Daily' }
 
@@ -21,8 +22,8 @@ export default function NoteArticle({ note, noteNum, onOpenIndex }: Props) {
         className="hover-accent"
         style={{
           marginBottom: 22,
-          border: '1px solid rgba(255,255,255,.22)',
-          color: '#f4f4f1',
+          border: `1px solid ${T.btnBorder}`,
+          color: T.text,
           fontFamily: "'Geist',ui-monospace,monospace",
           fontSize: 12,
           textTransform: 'uppercase',
@@ -36,22 +37,22 @@ export default function NoteArticle({ note, noteNum, onOpenIndex }: Props) {
         }}
       ><ArrowLeft size={16} strokeWidth={1.5} />Index</button>
 
-      <div style={{ fontSize: 12, color: 'rgba(244,244,241,.46)', display: 'flex', alignItems: 'baseline', gap: 0 }}>
+      <div style={{ fontSize: 12, color: T.textFaint, display: 'flex', alignItems: 'baseline', gap: 0 }}>
         <span style={{ fontFamily: "'Geist',ui-monospace,monospace" }}>{note.date} · {typeEn}</span>
         {note.private && (
           <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontWeight: 600, letterSpacing: '.01em' }}> · 비공개</span>
         )}
       </div>
-      <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: 'clamp(28px,4.6vw,46px)', lineHeight: 1.12, letterSpacing: '-.025em', margin: '14px 0 6px', color: '#f6f6f3' }}>
+      <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: 'clamp(28px,4.6vw,46px)', lineHeight: 1.12, letterSpacing: '-.025em', margin: '14px 0 6px', color: T.heading }}>
         {note.title}
       </h2>
-      <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, color: 'rgba(244,244,241,.52)', marginBottom: 26 }}>{note.sub}</div>
+      <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, color: T.textMuted, marginBottom: 26 }}>{note.sub}</div>
       {note.body.map((block: any, i) => {
         if (typeof block === 'string') return (
-          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block}</p>
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: T.textBody, margin: '0 0 18px', maxWidth: 720 }}>{block}</p>
         )
         return (
-          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 720 }}>{block.content}</p>
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: T.textBody, margin: '0 0 18px', maxWidth: 720 }}>{block.content}</p>
         )
       })}
       {(note.images ?? []).length > 0 && (

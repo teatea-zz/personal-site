@@ -2,6 +2,7 @@
 
 import { ArrowUpRight } from 'lucide-react'
 import type { Work } from '@/types/database'
+import { T } from '@/lib/theme'
 
 const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
 
@@ -27,7 +28,7 @@ export default function WorkGrid({ works, onOpen }: Props) {
           onClick={() => onOpen(i)}
           style={{ width: '100%', textAlign: 'left', border: 0, padding: 0, cursor: 'pointer', color: 'inherit', display: 'block', background: 'transparent' }}
         >
-          <div style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: 10, border: '1px solid rgba(255,255,255,.1)', background: '#1a1a1a' }}>
+          <div style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: 10, border: `1px solid ${T.hairline}`, background: T.imgWell }}>
             <div
               className="card-img"
               style={{
@@ -40,12 +41,12 @@ export default function WorkGrid({ works, onOpen }: Props) {
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, marginTop: 11 }}>
-            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 700, color: '#f2f2ee' }}>{w.title}</span>
-            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'rgba(244,244,241,.4)' }}>{w.tag}</span>
+            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 700, color: T.heading }}>{w.title}</span>
+            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.textGhost }}>{w.tag}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 4 }}>
-            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, color: 'rgba(244,244,241,.52)' }}>{w.role} · {w.year}</span>
-            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, fontWeight: 500, color: 'rgba(244,244,241,.7)', display: 'flex', alignItems: 'center', gap: 3 }}>View <ArrowUpRight size={16} strokeWidth={1.5} /></span>
+            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, color: T.textMuted }}>{w.role} · {w.year}</span>
+            <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, fontWeight: 500, color: T.textDim, display: 'flex', alignItems: 'center', gap: 3 }}>View <ArrowUpRight size={16} strokeWidth={1.5} /></span>
           </div>
         </button>
       ))}

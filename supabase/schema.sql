@@ -68,10 +68,12 @@ delete from works;
 alter table notes enable row level security;
 alter table works enable row level security;
 
--- Public read
+-- Read: works는 공개, notes는 비공개 글을 인증된 사용자(관리자)만
 drop policy if exists "public read notes" on notes;
+drop policy if exists "read notes public or authenticated" on notes;
 drop policy if exists "public read works" on works;
-create policy "public read notes" on notes for select using (true);
+create policy "read notes public or authenticated" on notes
+  for select using (private = false or auth.role() = 'authenticated');
 create policy "public read works" on works for select using (true);
 
 -- Authenticated write (admin only)

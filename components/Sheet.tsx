@@ -1,6 +1,7 @@
 'use client'
 
 import type { Note, Work } from '@/types/database'
+import { T } from '@/lib/theme'
 import WorkGrid from './WorkGrid'
 import WorkDetail from './WorkDetail'
 import NoteArticle from './NoteArticle'
@@ -48,28 +49,28 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, onClos
       left: 0, right: 0, bottom: 0,
       top: 'clamp(38px,7vh,74px)',
       zIndex: 30,
-      background: 'rgba(12,12,12,.9)',
+      background: T.sheetBg,
       backdropFilter: 'blur(26px) saturate(1.1)',
       WebkitBackdropFilter: 'blur(26px) saturate(1.1)',
-      borderTop: '1px solid rgba(255,255,255,.14)',
+      borderTop: `1px solid ${T.sheetBorder}`,
       borderRadius: '18px 18px 0 0',
-      boxShadow: open ? '0 -34px 100px -20px rgba(0,0,0,.85)' : 'none',
+      boxShadow: open ? T.sheetShadow : 'none',
       display: 'flex',
       flexDirection: 'column',
       transform: open ? 'translateY(0%)' : 'translateY(101%)',
       pointerEvents: open ? 'auto' : 'none',
       transition: 'transform .48s cubic-bezier(.16,1,.3,1)',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px clamp(16px,3vw,34px)', borderBottom: '1px solid rgba(255,255,255,.1)', flex: 'none' }}>
-        <span style={{ fontFamily: view === 'project' ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: 'rgba(244,244,241,.62)' }}>{title}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px clamp(16px,3vw,34px)', borderBottom: `1px solid ${T.hairline}`, flex: 'none' }}>
+        <span style={{ fontFamily: view === 'project' ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: T.textDim }}>{title}</span>
         <button
           onClick={onClose}
           className="hover-accent"
-          style={{ border: '1px solid rgba(255,255,255,.24)', color: '#f4f4f1', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, padding: '8px 18px', borderRadius: 8, cursor: 'pointer', transition: 'background-color .16s ease-out, color .16s ease-out' }}
+          style={{ border: `1px solid ${T.btnBorder}`, color: T.text, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, padding: '8px 18px', borderRadius: 8, cursor: 'pointer', transition: 'background-color .16s ease-out, color .16s ease-out' }}
         >Close</button>
       </div>
 
-      <div style={{ padding: 'clamp(18px,3vw,38px)', overflowY: 'auto', color: '#f4f4f1', flex: 1 }}>
+      <div style={{ padding: 'clamp(18px,3vw,38px)', overflowY: 'auto', color: T.text, flex: 1 }}>
         {view === 'work' && <WorkGrid works={works} onOpen={onOpenProject} />}
         {view === 'project' && works[projIndex] && (
           <WorkDetail work={works[projIndex]} onBack={onBackToWork} onLightbox={onLightbox} />

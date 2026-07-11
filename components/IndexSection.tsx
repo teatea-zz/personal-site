@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Note } from '@/types/database'
+import { T } from '@/lib/theme'
 
 const TYPE_EN: Record<string, string> = { '노트': 'Note', '로그': 'Log', '습작': 'Study', '회고': 'Retro', '일상': 'Daily' }
 const TYPE_ORDER = ['노트', '로그', '습작', '회고', '일상']
@@ -23,18 +24,18 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
     fontWeight: 600,
     padding: '8px 15px',
     borderRadius: 8,
-    border: '1px solid rgba(255,255,255,.24)',
+    border: `1px solid ${T.btnBorder}`,
     background: 'transparent',
-    color: '#f4f4f1',
+    color: T.text,
     cursor: 'pointer',
     transition: '.18s',
     whiteSpace: 'nowrap',
   }
   const tabActive: React.CSSProperties = {
     ...tabBase,
-    background: 'var(--accent,#FFD270)',
-    color: 'var(--accent-fg,#0e0e0e)',
-    border: '1px solid var(--accent,#FFD270)',
+    background: 'var(--accent)',
+    color: 'var(--accent-fg)',
+    border: '1px solid var(--accent)',
   }
 
   return (
@@ -44,7 +45,7 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
           <button key={t} onClick={() => setFilter(t)} style={t === filter ? tabActive : tabBase}>{t}</button>
         ))}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'rgba(244,244,241,.4)', padding: '0 14px 10px', borderBottom: '1px solid rgba(255,255,255,.18)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.textGhost, padding: '0 14px 10px', borderBottom: `1px solid ${T.hairlineStrong}` }}>
         <span>DATE / TITLE</span><span>TYPE</span>
       </div>
       {filtered.map((note, i) => (
@@ -56,10 +57,10 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
             width: '100%',
             textAlign: 'left',
             border: 0,
-            borderBottom: '1px solid rgba(255,255,255,.09)',
+            borderBottom: `1px solid ${T.hairline}`,
             padding: '14px 14px',
             cursor: 'pointer',
-            color: '#f4f4f1',
+            color: T.text,
             display: 'grid',
             gridTemplateColumns: '96px 1fr auto',
             gap: 14,
@@ -69,7 +70,11 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
           }}
         >
           <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'currentColor', opacity: .55 }}>{note.date}</span>
-          <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 600, color: 'currentColor', opacity: .92, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note.title}</span>
+          <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 600, color: 'currentColor', opacity: .92, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {note.title}
+            {/* 비공개 마커 — 관리자 세션에서만 노출되는 글 */}
+            {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 3, verticalAlign: 'text-top' }} />}
+          </span>
           <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 600, color: 'currentColor', opacity: .7, border: '1px solid currentColor', borderRadius: 5, padding: '3px 9px', whiteSpace: 'nowrap' }}>
             {TYPE_EN[note.type] || note.type}
           </span>

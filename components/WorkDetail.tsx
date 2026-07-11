@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import type { Work } from '@/types/database'
+import { T } from '@/lib/theme'
 
 const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
 
@@ -18,8 +19,8 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
         onClick={onBack}
         className="hover-accent"
         style={{
-          border: '1px solid rgba(255,255,255,.22)',
-          color: '#f4f4f1',
+          border: `1px solid ${T.btnBorder}`,
+          color: T.text,
           fontFamily: "'Geist',ui-monospace,monospace",
           fontSize: 12,
           textTransform: 'uppercase',
@@ -34,32 +35,32 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
         }}
       ><ArrowLeft size={16} strokeWidth={1.5} />Work</button>
 
-      <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 12, border: '1px solid rgba(255,255,255,.1)', background: '#1a1a1a' }}>
+      <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 12, border: `1px solid ${T.hairline}`, background: T.imgWell }}>
         <div style={{ width: '100%', height: '100%', backgroundImage: `url("${work.img}")`, backgroundSize: 'cover', backgroundPosition: 'center', filter: IMG_FILTER }} />
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, marginTop: 22 }}>
-        <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: 'clamp(28px,4.4vw,46px)', lineHeight: 1.04, letterSpacing: '-.03em', margin: 0, color: '#f6f6f3' }}>{work.title}</h2>
-        <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(244,244,241,.5)' }}>{work.role} · {work.year} · {work.tag}</span>
+        <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: 'clamp(28px,4.4vw,46px)', lineHeight: 1.04, letterSpacing: '-.03em', margin: 0, color: T.heading }}>{work.title}</h2>
+        <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontSize: 12, fontWeight: 500, color: T.textMuted }}>{work.role} · {work.year} · {work.tag}</span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 1, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 10, overflow: 'hidden', margin: '26px 0' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: 1, background: T.statGridBg, border: `1px solid ${T.statGridBg}`, borderRadius: 10, overflow: 'hidden', margin: '26px 0' }}>
         {[
           { label: 'Year', val: work.year },
           { label: 'Role', val: work.role },
           { label: 'Field', val: work.field },
           { label: 'Tools', val: work.tools },
         ].map(({ label, val }) => (
-          <div key={label} style={{ background: '#101010', padding: '14px 16px' }}>
-            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, textTransform: 'uppercase', color: 'rgba(244,244,241,.4)' }}>{label}</div>
-            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, fontWeight: 500, marginTop: 5, color: '#eee' }}>{val}</div>
+          <div key={label} style={{ background: T.statCellBg, padding: '14px 16px' }}>
+            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, textTransform: 'uppercase', color: T.textGhost }}>{label}</div>
+            <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 14, fontWeight: 500, marginTop: 5, color: T.textStrong }}>{val}</div>
           </div>
         ))}
       </div>
 
       {work.description.map((block: any, i) => {
         if (typeof block === 'string') return (
-          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 920 }}>{block}</p>
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: T.textBody, margin: '0 0 18px', maxWidth: 920 }}>{block}</p>
         )
         if (block.type === 'image') return (
           <div key={i} style={{ margin: '24px 0' }}>
@@ -67,15 +68,15 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
           </div>
         )
         return (
-          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: 'rgba(244,244,241,.82)', margin: '0 0 18px', maxWidth: 920 }}>{block.content}</p>
+          <p key={i} style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 16, lineHeight: 1.8, color: T.textBody, margin: '0 0 18px', maxWidth: 920 }}>{block.content}</p>
         )
       })}
 
-      <div style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, textTransform: 'uppercase', color: 'rgba(244,244,241,.4)', margin: '28px 0 12px' }}>Gallery — tap to enlarge</div>
+      <div style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, textTransform: 'uppercase', color: T.textGhost, margin: '28px 0 12px' }}>Gallery — tap to enlarge</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,280px),1fr))', gap: 14 }}>
         {work.gallery.map((src, i) => (
           <button key={i} onClick={() => onLightbox(src)} style={{ width: '100%', padding: 0, border: 0, cursor: 'zoom-in', display: 'block', background: 'transparent' }}>
-            <div style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: 10, border: '1px solid rgba(255,255,255,.1)', background: '#1a1a1a' }}>
+            <div style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: 10, border: `1px solid ${T.hairline}`, background: T.imgWell }}>
               <div className="gallery-img" style={{ width: '100%', height: '100%', backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center', filter: IMG_FILTER }} />
             </div>
           </button>
