@@ -84,9 +84,10 @@ export default function SiteClient({ notes, works }: Props) {
           onOpenNote={openNote}
           onOpenView={openView}
         />
+        {/* 데스크톱: 플로팅(fixed) / 모바일: 이 위치(홈카드 아래)에 흐름 배치 */}
+        <SpotifyPlayer />
 
         <SocialBar />
-        <SpotifyPlayer />
       </section>
 
       {/* Sheet panel */}

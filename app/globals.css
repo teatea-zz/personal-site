@@ -64,6 +64,26 @@ button { background-color: transparent; }
   }
 }
 
+/* ── Spotify 플레이어 도킹 ──
+   데스크톱: 소셜바(50px) 좌측 플로팅 / 모바일: 홈카드 아래 세로 스택 */
+.spotify-dock {
+  position: fixed;
+  right: calc(clamp(12px,2vw,28px) + 50px + 10px);
+  bottom: clamp(12px,2vw,28px);
+  z-index: 20;
+  width: min(300px, calc(100vw - 140px));
+}
+@media (max-width: 640px) {
+  .spotify-dock {
+    position: static;
+    /* 우측 플로팅 소셜바(50px + 여백)와 겹치지 않도록 폭 제한 */
+    width: min(calc(100% - 62px), 448px);
+    margin-top: 12px;
+  }
+  /* 모바일에서는 최근 노트 4개 → 3개 (인라인 display:block보다 우선해야 해서 !important) */
+  .home-note:nth-of-type(4) { display: none !important; }
+}
+
 .card-img { transition: transform 0.6s ease; }
 .card-img:hover { transform: scale(1.05); }
 .gallery-img { transition: transform 0.5s; }

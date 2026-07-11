@@ -16,15 +16,10 @@ export default function SpotifyPlayer() {
 
   if (!trackId) return null
 
+  // 위치는 globals.css .spotify-dock 담당 —
+  // 데스크톱: 소셜바 좌측 플로팅 / 모바일(≤640px): 홈카드 아래 세로 스택
   return (
-    <div style={{
-      position: 'fixed',
-      // 소셜바(width 50) 왼쪽에 10px 간격으로 배치
-      right: 'calc(clamp(12px,2vw,28px) + 50px + 10px)',
-      bottom: 'clamp(12px,2vw,28px)',
-      zIndex: 20,
-      width: 'min(300px, calc(100vw - 140px))',
-    }}>
+    <div className="spotify-dock">
       <iframe
         src={`https://open.spotify.com/embed/track/${trackId}`}
         width="100%"

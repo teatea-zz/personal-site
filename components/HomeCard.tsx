@@ -38,7 +38,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
             <button
               key={note.id}
               onClick={() => onOpenNote(i)}
-              className="hover-accent"
+              className="hover-accent home-note"
               style={{
                 width: '100%',
                 textAlign: 'left',
