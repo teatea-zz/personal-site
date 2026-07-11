@@ -15,3 +15,7 @@ docs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code skills (로컬 전용, npx skills add로 재설치 가능)
+.claude/skills/
+skills-lock.json

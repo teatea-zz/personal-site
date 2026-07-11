@@ -11,7 +11,12 @@ button { background-color: transparent; }
 *::-webkit-scrollbar { width: 9px; height: 9px; }
 *::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 9px; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: scale(.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 
 :root {
   --accent: #FFD270;
@@ -44,15 +49,17 @@ button { background-color: transparent; }
   }
 }
 
-.hover-accent:hover {
-  background: var(--accent) !important;
-  color: var(--accent-fg) !important;
-}
+@media (hover: hover) and (pointer: fine) {
+  .hover-accent:hover {
+    background: var(--accent) !important;
+    color: var(--accent-fg) !important;
+  }
 
-.hover-accent-border:hover {
-  background: var(--accent) !important;
-  color: var(--accent-fg) !important;
-  border-color: var(--accent) !important;
+  .hover-accent-border:hover {
+    background: var(--accent) !important;
+    color: var(--accent-fg) !important;
+    border-color: var(--accent) !important;
+  }
 }
 
 .card-img { transition: transform 0.6s ease; }

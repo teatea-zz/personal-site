@@ -104,6 +104,7 @@ export default function BreathVisual() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     // 팬 범위 내 층화 샘플링: 5구역 → 각 구역에서 랜덤 픽 → 셔플
     // 매 마운트마다 배가 다른 방향으로 등장

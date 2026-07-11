@@ -110,7 +110,7 @@ export default function AdminPage() {
     padding: '8px 14px', borderRadius: 13,
     border: '1px solid #FFD270',
     background: '#FFD270', color: INK,
-    cursor: 'pointer', transition: '.15s',
+    cursor: 'pointer', transition: 'background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out',
   }
   const tabIdle: React.CSSProperties = {
     ...tabActive,
@@ -181,10 +181,10 @@ export default function AdminPage() {
                 <button type="button" onClick={() => setSortOpen(o => !o)}
                   style={{ ...sortSelect, display: 'flex', alignItems: 'center', gap: 24, paddingRight: 36, position: 'relative' }}>
                   {sortDir === 'recent' ? '최근등록순' : '오래된순'}
-                  <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${sortOpen ? 180 : 0}deg)`, transition: 'transform .2s', color: 'rgba(35,31,26,.45)' }} />
+                  <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${sortOpen ? 180 : 0}deg)`, transition: 'transform .2s ease-out', color: 'rgba(35,31,26,.45)' }} />
                 </button>
                 {sortOpen && (
-                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%' }}>
+                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top right', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
                     {(['recent', 'oldest'] as const).map(val => (
                       <button key={val} type="button"
                         onClick={() => { setSortDir(val); setSortOpen(false) }}

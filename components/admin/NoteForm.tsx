@@ -144,10 +144,10 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
             <button type="button" onClick={() => setTypeOpen(o => !o)}
               style={{ ...inp, marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 36, position: 'relative', cursor: 'pointer', textAlign: 'left' }}>
               {form.type}
-              <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${typeOpen ? 180 : 0}deg)`, transition: 'transform .2s', pointerEvents: 'none', color: 'rgba(35,31,26,.45)' }} />
+              <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${typeOpen ? 180 : 0}deg)`, transition: 'transform .2s ease-out', pointerEvents: 'none', color: 'rgba(35,31,26,.45)' }} />
             </button>
             {typeOpen && (
-              <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%' }}>
+              <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top left', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
                 {TYPES.map(t => (
                   <button key={t} type="button"
                     onClick={() => { setForm(f => ({ ...f, type: t, ...(t === '일상' && !f.private ? { private: true } : {}) })); setTypeOpen(false) }}
