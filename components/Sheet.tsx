@@ -44,6 +44,19 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, onClos
   const title = sheetTitle(view, notes, works, noteIndex, projIndex)
 
   return (
+    <>
+    {/* 딤 배경 — 시트가 열리면 뒤 화면을 어둡게, 클릭 시 닫기 */}
+    <div
+      aria-hidden="true"
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 29,
+        background: 'rgba(35,31,26,.6)',
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        transition: 'opacity .3s ease',
+      }}
+    />
     <section style={{
       position: 'fixed',
       left: 0, right: 0, bottom: 0,
@@ -87,5 +100,6 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, onClos
         {view === 'index' && <IndexSection notes={notes} onOpenNote={onOpenNote} />}
       </div>
     </section>
+    </>
   )
 }
