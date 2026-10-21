@@ -7,6 +7,7 @@ import { T } from '@/lib/theme'
 import { saveNote, saveWork, deleteNote, deleteWork, type NoteInput, type WorkInput } from '@/lib/admin-actions'
 import NoteForm from './admin/NoteForm'
 import WorkForm from './admin/WorkForm'
+import { LEAVE_MESSAGE } from './admin/form-shared'
 import WorkGrid from './WorkGrid'
 import WorkDetail from './WorkDetail'
 import NoteArticle from './NoteArticle'
@@ -38,8 +39,7 @@ function sheetTitle(view: View, notes: Note[], works: Work[], noteIndex: number,
   if (view === 'note') {
     const note = notes[noteIndex]
     if (!note) return ''
-    const num = String(notes.length - noteIndex).padStart(3, '0')
-    return `${TYPE_EN[note.type] || note.type} N.${num}`
+    return `INDEX / ${TYPE_EN[note.type] || note.type}` // 경로 표시 (개수는 INDEX 필터 옆에)
   }
   if (view === 'project') return works[projIndex]?.title || ''
   const titles: Record<string, string> = { work: 'WORK', about: 'ABOUT', contact: 'CONTACT', index: 'INDEX' }
@@ -65,6 +65,12 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
   // 다른 화면으로 이동하거나 시트를 닫거나 로그아웃하면 편집 종료
   useEffect(() => { setEditing(null) }, [view, noteIndex, projIndex, isAdmin])
 
+  // 편집 중 저장 안 한 변경이 있으면 Close · 딤 클릭 · 목록 버튼에서 확인
+  const [dirty, setDirty] = useState(false)
+  useEffect(() => { if (!editing) setDirty(false) }, [editing])
+  const canLeave = () => !editing || !dirty || confirm(LEAVE_MESSAGE)
+  const close = () => { if (canLeave()) onClose() }
+
   const editTitle = editing
     ? `${editing.target === 'new' ? 'NEW' : 'EDIT'} ${editing.kind === 'work' ? 'WORK' : 'NOTE'}`
     : ''
@@ -83,8 +89,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
   async function handleSaveWork(data: WorkInput) {
     if (editing?.kind !== 'work') return
     const target = editing.target
-    try { await saveWork(data, target === 'new' ? undefined : target.id) }
-    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
+    await saveWork(data, target === 'new' ? undefined : target.id) // 실패 시 throw → 폼이 알림 · 내용 유지
     const next = await onRefresh()
     setEditing(null)
     if (target !== 'new') {
@@ -95,8 +100,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
   async function handleSaveNote(data: NoteInput) {
     if (editing?.kind !== 'note') return
     const target = editing.target
-    try { await saveNote(data, target === 'new' ? undefined : target.id) }
-    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
+    await saveNote(data, target === 'new' ? undefined : target.id) // 실패 시 throw → 폼이 알림 · 내용 유지
     const next = await onRefresh()
     setEditing(null)
     if (target !== 'new') {
@@ -125,7 +129,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
     {/* 딤 배경 — 시트가 열리면 뒤 화면을 어둡게, 클릭 시 닫기 */}
     <div
       aria-hidden="true"
-      onClick={onClose}
+      onClick={close}
       style={{
         position: 'fixed', inset: 0, zIndex: 29,
         background: 'rgba(35,31,26,.6)',
@@ -152,12 +156,17 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
       transition: 'transform .48s cubic-bezier(.16,1,.3,1)',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px clamp(16px,3vw,34px)', borderBottom: `1px solid ${T.hairline}`, flex: 'none' }}>
-        <span style={{ fontFamily: view === 'project' && !editing ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: T.textDim }}>{title}</span>
+        <span style={{ fontFamily: view === 'project' && !editing ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: T.text }}>
+          {/* 노트 상세 경로: 상위(INDEX /)는 그레이, 현재 타입(Daily)은 잉크 */}
+          {view === 'note' && !editing && title.startsWith('INDEX / ')
+            ? <><span style={{ color: T.textDim }}>INDEX /</span> {title.slice('INDEX / '.length)}</>
+            : title}
+        </span>
         <div style={{ display: 'flex', gap: 8 }}>
           {/* 목록으로 돌아가기 — 편집 중 / 작업물 상세 / 노트 상세 (시트는 유지) */}
           {(editing || view === 'project' || view === 'note') && (
             <button
-              onClick={() => { const toIndex = editing ? editing.kind === 'note' : view === 'note'; setEditing(null); if (toIndex) onOpenIndex(); else onBackToWork() }}
+              onClick={() => { if (!canLeave()) return; const toIndex = editing ? editing.kind === 'note' : view === 'note'; setEditing(null); if (toIndex) onOpenIndex(); else onBackToWork() }}
               className="hover-accent"
               style={headerBtn}
             >
@@ -169,7 +178,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
               {adminAction.plus && <Plus size={14} strokeWidth={1.5} />}{adminAction.label}
             </button>
           )}
-          <button onClick={onClose} className="hover-accent" style={headerBtn}>Close</button>
+          <button onClick={close} className="hover-accent" style={headerBtn}>Close</button>
         </div>
       </div>
 
@@ -189,6 +198,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
                 onSave={handleSaveWork}
                 onCancel={() => setEditing(null)}
                 onDelete={handleDeleteWork}
+                onDirtyChange={setDirty}
               />
             ) : (
               <NoteForm
@@ -197,6 +207,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
                 onSave={handleSaveNote}
                 onCancel={() => setEditing(null)}
                 onDelete={handleDeleteNote}
+                onDirtyChange={setDirty}
               />
             )}
           </div>

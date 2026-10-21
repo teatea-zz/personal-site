@@ -39,9 +39,13 @@ export default function WorkGrid({ works, onOpen }: Props) {
             />
           </div>
           {/* 제목은 한 줄 — 넘치면 말줄임 (전체 제목은 title 툴팁 / 상세 페이지) */}
-          <div title={w.title} className="work-card-title" style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 24, fontWeight: 700, color: T.heading, marginTop: 11, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{w.title}</div>
+          <div title={w.title} className="work-card-title" style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 24, fontWeight: 700, color: T.heading, marginTop: 11, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {w.title}
+            {/* 비공개 마커 — 관리자 세션에서만 노출되는 작업물 (노트와 동일) */}
+            {w.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#FF6D19', marginLeft: 4, verticalAlign: 'super' }} />}
+          </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginTop: 4 }}>
-            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13, color: T.textDim }}>{w.role} · {w.year}</span>
+            <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13, fontWeight: 500, color: T.textDim }}>{w.role} · {w.year}</span>
             <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, fontWeight: 500, color: T.textDim, display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0 }}>View <ArrowRight size={16} strokeWidth={1.5} /></span>
           </div>
         </button>

@@ -2,16 +2,20 @@
 
 import { useState, useRef } from 'react'
 import { Square, CheckSquare, ChevronDown, CircleX } from 'lucide-react'
-import { supabaseBrowser } from '@/lib/supabase-browser'
 import type { Note, NoteLayout, TextBlock, ImageBlock } from '@/types/database'
+import {
+  type ImgItem, toItems, pickFiles, revoke, removeFromStorage, uploadPending,
+  useDraft, DraftBanner, useLeaveGuard, Segmented, SortableThumbs, LEAVE_MESSAGE,
+} from './form-shared'
 
 const TYPES = ['노트', '로그', '습작', '회고', '일상']
 const LAYOUTS: { value: NoteLayout; label: string }[] = [
   { value: 'text',    label: '글' },
-  { value: 'image-1', label: '이미지 1단' },
-  { value: 'image-2', label: '이미지 2단' },
+  { value: 'image-1', label: '사진 1단' },
+  { value: 'image-2', label: '사진 2단' },
+  { value: 'image-3', label: '사진 3단' },
 ]
-// 타입별 기본 레이아웃 — 습작 · 일상은 이미지 2단, 나머지는 글
+// 타입별 기본 레이아웃 — 습작 · 일상은 사진 2단, 나머지는 글
 const defaultLayout = (type: string): NoteLayout => (type === '습작' || type === '일상' ? 'image-2' : 'text')
 const INK   = '#231F1A'
 const mono  = "'Geist',ui-monospace,monospace"
@@ -52,15 +56,18 @@ function noteToForm(note?: Partial<Note>): FormData {
 
 interface Props {
   initial?: Note
+  /** 실패 시 throw — 폼이 알림을 띄우고 내용을 그대로 유지 */
   onSave: (data: Omit<Note, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
   /** 넘기면 편집 모드에서 Update 좌측에 Delete 버튼 노출 (메인 사이트 시트용) */
   onDelete?: () => Promise<void>
+  /** 저장 안 한 변경 여부 — 시트 Close · 목록 버튼에서 나가기 전 확인용 */
+  onDirtyChange?: (dirty: boolean) => void
 }
 
 const inp: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(35,31,26,.04)',
+  background: '#FFFFFF',
   border: '1px solid rgba(35,31,26,.15)',
   borderRadius: 13,
   padding: '10px 14px',
@@ -103,62 +110,70 @@ const deleteBtn: React.CSSProperties = {
   cursor: 'pointer',
 }
 
-export default function NoteForm({ initial, onSave, onCancel, onDelete }: Props) {
-  const [form, setForm]   = useState<FormData>(noteToForm(initial))
+export default function NoteForm({ initial, onSave, onCancel, onDelete, onDirtyChange }: Props) {
+  const initialForm = useRef(noteToForm(initial)).current
+  const [form, setForm]   = useState<FormData>(initialForm)
   const [typeOpen, setTypeOpen] = useState(false)
-  const [images, setImages] = useState<string[]>(initial?.images ?? [])
-  const [saving, setSaving]               = useState(false)
-  const [uploadingImages, setUploadingImages] = useState(false)
+  const [images, setImages] = useState<ImgItem[]>(toItems(initial?.images ?? []))
+  const [saving, setSaving] = useState<string | null>(null) // 버튼 진행 문구
   const imagesRef = useRef<HTMLInputElement>(null)
+
+  const draft = useDraft(`draft:note:${initial?.id ?? 'new'}`, form, initialForm)
+  const dirty = JSON.stringify(form) !== JSON.stringify(initialForm)
+    || images.map(i => i.url).join('\n') !== (initial?.images ?? []).join('\n')
+  useLeaveGuard(dirty, onDirtyChange)
 
   const set = (k: keyof FormData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm(f => ({ ...f, [k]: e.target.value }))
 
-  async function removeImage(url: string) {
-    // Supabase Storage에서 파일 삭제
-    try {
-      const path = url.split('/notes/')[1]
-      if (path) await supabaseBrowser.storage.from('notes').remove([path])
-    } catch { /* URL이 외부 URL이면 무시 */ }
-    setImages(imgs => imgs.filter(u => u !== url))
-  }
-
-  async function handleImagesUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? [])
-    if (!files.length) return
-    setUploadingImages(true)
-    try {
-      const urls = await Promise.all(files.map(async (file) => {
-        const ext  = file.name.split('.').pop()
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-        const { error } = await supabaseBrowser.storage.from('notes').upload(path, file)
-        if (error) throw error
-        return supabaseBrowser.storage.from('notes').getPublicUrl(path).data.publicUrl
-      }))
-      setImages(imgs => [...imgs, ...urls])
-    } catch { alert('Upload failed') }
-    setUploadingImages(false)
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSaving(true)
-    await onSave({
-      type:    form.type,
-      date:    form.date,
-      title:   form.title,
-      sub:     form.sub,
-      body:    form.body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
-      images,
-      private: form.private,
-      layout:  form.layout,
-    })
-    setSaving(false)
+    setSaving('Saving…')
+    let uploaded: string[] = []
+    try {
+      // 1. 이미지 업로드 (실패하면 이번에 올린 파일은 정리되고 여기서 중단)
+      const res = await uploadPending('notes', [images], (done, total) => setSaving(`이미지 업로드 ${done + 1}/${total}`))
+      uploaded = res.uploaded
+      const imageUrls = res.urls[0]
+
+      // 2. 글 저장
+      setSaving('Saving…')
+      await onSave({
+        type:    form.type,
+        date:    form.date,
+        title:   form.title,
+        sub:     form.sub,
+        body:    form.body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
+        images:  imageUrls,
+        private: form.private,
+        layout:  form.layout,
+      })
+
+      // 3. 저장 성공 후에만: 빠진 기존 이미지 삭제 · 임시 저장 삭제
+      const kept = new Set(imageUrls)
+      await removeFromStorage('notes', (initial?.images ?? []).filter(u => !kept.has(u))).catch(() => {})
+      draft.clear()
+      revoke(images)
+    } catch (err) {
+      // 글 저장이 실패했으면 방금 올린 이미지도 정리 → 다시 누르면 처음부터 깨끗하게
+      await removeFromStorage('notes', uploaded).catch(() => {})
+      alert(`저장에 실패했어요. 입력한 내용은 그대로 있어요.\n${(err as Error)?.message ?? ''}`)
+      setSaving(null)
+    }
+  }
+
+  function handleCancel() {
+    if (dirty && !confirm(LEAVE_MESSAGE)) return
+    revoke(images)
+    onCancel()
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      {draft.pending && (
+        <DraftBanner onRestore={() => draft.restore(setForm)} onDiscard={draft.discard} />
+      )}
       <div className="adm-form-grid3eq">
         <div>
           <label style={lbl}>Type</label>
@@ -182,61 +197,37 @@ export default function NoteForm({ initial, onSave, onCancel, onDelete }: Props)
             )}
           </div>
         </div>
-        {/* 상세 레이아웃 — 타입을 고르면 기본값으로 바뀌고, 직접 바꿀 수도 있음 */}
-        <div>
-          <label style={lbl}>Layout</label>
-          <div role="radiogroup" aria-label="상세 레이아웃" style={{ display: 'flex', gap: 4, padding: 4, border: '1px solid rgba(35,31,26,.15)', borderRadius: 13, background: 'rgba(35,31,26,.04)' }}>
-            {LAYOUTS.map(l => {
-              const on = form.layout === l.value
-              return (
-                <button key={l.value} type="button" role="radio" aria-checked={on} onClick={() => setForm(f => ({ ...f, layout: l.value }))}
-                  style={{
-                    flex: 1, whiteSpace: 'nowrap', padding: '7px 6px', borderRadius: 9, border: 0, cursor: 'pointer',
-                    fontFamily: suit, fontSize: 'var(--fs-label)' as any, fontWeight: on ? 700 : 500,
-                    background: on ? INK : 'transparent', color: on ? '#FDFBF7' : 'rgba(35,31,26,.6)',
-                  }}>
-                  {l.label}
-                </button>
-              )
-            })}
-          </div>
-        </div>
         <div>
           <label style={lbl}>Date</label>
           <input style={{ ...inp, marginBottom: 0 }} value={form.date} onChange={set('date')} placeholder="2026.06.12" required />
         </div>
+        {/* 상세 레이아웃 — 타입을 고르면 기본값으로 바뀌고, 직접 바꿀 수도 있음 */}
+        <div>
+          <label style={lbl}>Layout</label>
+          <Segmented label="상세 레이아웃" value={form.layout} options={LAYOUTS} onChange={l => setForm(f => ({ ...f, layout: l }))} />
+        </div>
       </div>
 
-      <div style={{ marginTop: 14 }}>
-        <label style={lbl}>Title</label>
-        <input style={inp} value={form.title} onChange={set('title')} required />
+      {/* Title(2칸) + Subtitle(1칸) — 윗줄과 같은 3칸 그리드라 Subtitle 폭 = Layout 폭 */}
+      <div className="adm-form-grid3eq" style={{ marginTop: 14, marginBottom: 14 }}>
+        <div className="adm-span2">
+          <label style={lbl}>Title</label>
+          <input style={{ ...inp, marginBottom: 0 }} value={form.title} onChange={set('title')} required />
+        </div>
+        <div>
+          <label style={lbl}>Subtitle</label>
+          <input style={{ ...inp, marginBottom: 0 }} value={form.sub} onChange={set('sub')} />
+        </div>
       </div>
-
-      <label style={lbl}>Subtitle</label>
-      <input style={inp} value={form.sub} onChange={set('sub')} />
 
       <label style={lbl}>Body (단락 사이 빈 줄로 구분)</label>
       <textarea style={{ ...inp, height: 480, resize: 'none', overflowY: 'auto', lineHeight: 1.7 }} value={form.body} onChange={set('body')} />
 
       {/* Images */}
-      <label style={lbl}>Images (선택)</label>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 14 }}>
-        {images.map((url, i) => (
-          <div key={i} style={{ position: 'relative' }}>
-            <img src={url} alt="" style={{ width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)' }} />
-            <button type="button"
-              onClick={() => removeImage(url)}
-              style={{ position: 'absolute', top: -10, right: -10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
-              <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={() => imagesRef.current?.click()} disabled={uploadingImages}
-          style={{ ...uploadBtn, width: 160, height: 120, borderRadius: 13, borderStyle: 'dashed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {uploadingImages ? 'Uploading…' : '↑ Upload'}
-        </button>
-        <input ref={imagesRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleImagesUpload} />
-      </div>
+      <label style={lbl}>Images (선택 · 끌어서 순서 변경)</label>
+      <SortableThumbs items={images} setItems={setImages} onPick={() => imagesRef.current?.click()} />
+      <input ref={imagesRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+        onChange={e => { const items = pickFiles(e.target.files); setImages(list => [...list, ...items]); e.target.value = '' }} />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
         <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
@@ -248,13 +239,13 @@ export default function NoteForm({ initial, onSave, onCancel, onDelete }: Props)
         </label>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
           {initial && onDelete && (
-            <button type="button" onClick={onDelete} disabled={saving} style={deleteBtn}>Delete</button>
+            <button type="button" onClick={onDelete} disabled={!!saving} style={deleteBtn}>Delete</button>
           )}
-          <button type="submit" disabled={saving}
+          <button type="submit" disabled={!!saving}
             style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
-            {saving ? 'Saving…' : (initial ? 'Update' : 'Create')}
+            {saving ?? (initial ? 'Update' : 'Create')}
           </button>
-          <button type="button" onClick={onCancel}
+          <button type="button" onClick={handleCancel} disabled={!!saving}
             style={{ background: 'transparent', color: `rgba(35,31,26,.5)`, border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
             Cancel
           </button>

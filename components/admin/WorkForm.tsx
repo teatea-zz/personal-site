@@ -1,24 +1,29 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { CircleX } from 'lucide-react'
-import { supabaseBrowser } from '@/lib/supabase-browser'
-import type { Work, TextBlock } from '@/types/database'
+import { CircleX, Square, CheckSquare } from 'lucide-react'
+import type { Work } from '@/types/database'
+import {
+  type ImgItem, toItems, pickFiles, revoke, removeFromStorage, uploadPending,
+  useDraft, DraftBanner, useLeaveGuard, Segmented, SortableThumbs, LEAVE_MESSAGE,
+} from './form-shared'
 
 const INK  = '#231F1A'
 const mono = "'Geist',ui-monospace,monospace"
 const suit = "'SUIT Variable',sans-serif"
 
+// 글로 된 입력값 (임시 저장 대상 — 이미지는 원본이 있으니 제외)
 type FormData = {
-  title:      string
-  year:       string
-  role:       string
-  field:      string
-  tools:      string
-  tag:        string
-  img:        string
-  desc:       string
-  gallery:    string
+  title:       string
+  year:        string
+  role:        string
+  field:       string
+  tools:       string
+  tag:         string
+  img:         string // 히어로 URL 직접 입력값 (파일을 고르면 heroFile이 우선)
+  desc:        string
+  galleryCols: number
+  private:     boolean
 }
 
 function workToForm(work?: Partial<Work>): FormData {
@@ -36,21 +41,25 @@ function workToForm(work?: Partial<Work>): FormData {
       }
       return b.type === 'text' ? b.content : null
     }).filter(Boolean).join('\n\n'),
-    gallery: (work?.gallery ?? []).join('\n'),
+    galleryCols: work?.gallery_cols ?? 1,
+    private:     work?.private ?? false,
   }
 }
 
 interface Props {
   initial?: Work
+  /** 실패 시 throw — 폼이 알림을 띄우고 내용을 그대로 유지 */
   onSave: (data: Omit<Work, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
   /** 넘기면 편집 모드에서 Update 좌측에 Delete 버튼 노출 (메인 사이트 시트용) */
   onDelete?: () => Promise<void>
+  /** 저장 안 한 변경 여부 — 시트 Close · 목록 버튼에서 나가기 전 확인용 */
+  onDirtyChange?: (dirty: boolean) => void
 }
 
 const inp: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(35,31,26,.04)',
+  background: '#FFFFFF',
   border: '1px solid rgba(35,31,26,.15)',
   borderRadius: 13,
   padding: '10px 14px',
@@ -93,105 +102,116 @@ const deleteBtn: React.CSSProperties = {
   cursor: 'pointer',
 }
 
-async function deleteFromStorage(bucket: 'works', url: string) {
-  try {
-    const path = url.split(`/${bucket}/`)[1]
-    if (path) await supabaseBrowser.storage.from(bucket).remove([path])
-  } catch { /* 외부 URL이면 무시 */ }
-}
-
-async function uploadImage(file: File): Promise<string> {
-  const ext  = file.name.split('.').pop()
-  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-  const { error } = await supabaseBrowser.storage.from('works').upload(path, file)
-  if (error) throw error
-  return supabaseBrowser.storage.from('works').getPublicUrl(path).data.publicUrl
-}
-
-export default function WorkForm({ initial, onSave, onCancel, onDelete }: Props) {
-  const [form, setForm]               = useState<FormData>(workToForm(initial))
-  const [galleryCols, setGalleryCols] = useState<number>(initial?.gallery_cols ?? 1)
-  const [saving, setSaving]           = useState(false)
-  const [uploadingHero, setUploadingHero]       = useState(false)
-  const [uploadingGallery, setUploadingGallery] = useState(false)
+export default function WorkForm({ initial, onSave, onCancel, onDelete, onDirtyChange }: Props) {
+  const initialForm = useRef(workToForm(initial)).current
+  const [form, setForm]         = useState<FormData>(initialForm)
+  const [heroFile, setHeroFile] = useState<ImgItem | null>(null)          // 아직 안 올린 히어로
+  const [gallery, setGallery]   = useState<ImgItem[]>(toItems(initial?.gallery ?? []))
+  const [saving, setSaving]     = useState<string | null>(null)           // 버튼 진행 문구
   const heroRef    = useRef<HTMLInputElement>(null)
   const galleryRef = useRef<HTMLInputElement>(null)
+
+  const draft = useDraft(`draft:work:${initial?.id ?? 'new'}`, form, initialForm)
+  const dirty = JSON.stringify(form) !== JSON.stringify(initialForm) || !!heroFile
+    || gallery.map(g => g.url).join('\n') !== (initial?.gallery ?? []).join('\n')
+  useLeaveGuard(dirty, onDirtyChange)
 
   const set = (k: keyof FormData) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm(f => ({ ...f, [k]: e.target.value }))
 
-  async function handleHeroUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploadingHero(true)
-    try { setForm(f => ({ ...f, img: '' })); const url = await uploadImage(file); setForm(f => ({ ...f, img: url })) }
-    catch { alert('Upload failed') }
-    setUploadingHero(false)
-  }
-
-  async function handleGalleryUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? [])
-    if (!files.length) return
-    setUploadingGallery(true)
-    try {
-      const urls = await Promise.all(files.map(uploadImage))
-      setForm(f => ({ ...f, gallery: [...f.gallery.split('\n').filter(Boolean), ...urls].join('\n') }))
-    } catch { alert('Upload failed') }
-    setUploadingGallery(false)
-  }
+  const heroPreview = heroFile?.url ?? form.img
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSaving(true)
-    await onSave({
-      title:       form.title,
-      year:        form.year,
-      role:        form.role,
-      field:       form.field,
-      tools:       form.tools,
-      tag:         form.tag,
-      img:         form.img,
-      description: form.desc.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
-      gallery:     form.gallery.split('\n').map(u => u.trim()).filter(Boolean),
-      gallery_cols: galleryCols,
-    })
-    setSaving(false)
+    setSaving('Saving…')
+    let uploaded: string[] = []
+    try {
+      // 1. 이미지 업로드 (실패하면 이번에 올린 파일은 정리되고 여기서 중단)
+      const res = await uploadPending('works', [heroFile ? [heroFile] : [], gallery],
+        (done, total) => setSaving(`이미지 업로드 ${done + 1}/${total}`))
+      uploaded = res.uploaded
+      const img = heroFile ? res.urls[0][0] : form.img
+      const galleryUrls = res.urls[1]
+
+      // 2. 글 저장
+      setSaving('Saving…')
+      await onSave({
+        title:       form.title,
+        year:        form.year,
+        role:        form.role,
+        field:       form.field,
+        tools:       form.tools,
+        tag:         form.tag,
+        img,
+        description: form.desc.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
+        gallery:     galleryUrls,
+        gallery_cols: form.galleryCols,
+        private:     form.private,
+      })
+
+      // 3. 저장 성공 후에만: 빠진 기존 이미지 삭제 · 임시 저장 삭제
+      const kept = new Set([img, ...galleryUrls])
+      const removed = [initial?.img ?? '', ...(initial?.gallery ?? [])].filter(u => u && !kept.has(u))
+      await removeFromStorage('works', removed).catch(() => {})
+      draft.clear()
+      revoke([...(heroFile ? [heroFile] : []), ...gallery])
+    } catch (err) {
+      // 글 저장이 실패했으면 방금 올린 이미지도 정리 → 다시 누르면 처음부터 깨끗하게
+      await removeFromStorage('works', uploaded).catch(() => {})
+      alert(`저장에 실패했어요. 입력한 내용은 그대로 있어요.\n${(err as Error)?.message ?? ''}`)
+      setSaving(null)
+    }
   }
 
-  const galleryUrls = form.gallery.split('\n').filter(Boolean)
+  function handleCancel() {
+    if (dirty && !confirm(LEAVE_MESSAGE)) return
+    revoke([...(heroFile ? [heroFile] : []), ...gallery])
+    onCancel()
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Row 1: Title / Year / Tag */}
+      {draft.pending && (
+        <DraftBanner onRestore={() => draft.restore(setForm)} onDiscard={draft.discard} />
+      )}
+
+      {/* Row 1: Title / Year / Gallery 단 수 */}
       <div className="adm-form-grid3">
         <div><label style={lbl}>Title</label><input style={{ ...inp, marginBottom: 0 }} value={form.title} onChange={set('title')} required /></div>
         <div><label style={lbl}>Year</label><input style={{ ...inp, marginBottom: 0 }} value={form.year} onChange={set('year')} placeholder="2026" required /></div>
-        <div><label style={lbl}>Tag</label><input style={{ ...inp, marginBottom: 0 }} value={form.tag} onChange={set('tag')} placeholder="WEB (선택)" /></div>
+        {/* 상세 페이지 갤러리 단 수 (모바일은 3단도 2단으로 표시) */}
+        <div>
+          <label style={lbl}>Gallery</label>
+          <Segmented label="갤러리 단 수" value={form.galleryCols} onChange={n => setForm(f => ({ ...f, galleryCols: n }))}
+            options={[1, 2, 3].map(n => ({ value: n, label: `${n}단` }))} />
+        </div>
       </div>
 
-      {/* Row 2: Role / Field / Tools */}
-      <div className="adm-form-grid3eq" style={{ marginTop: 14 }}>
+      {/* Row 2: Role / Field / Tools / Tag */}
+      <div className="adm-form-grid4" style={{ marginTop: 14 }}>
         <div><label style={lbl}>Role</label><input style={{ ...inp, marginBottom: 0 }} value={form.role} onChange={set('role')} required /></div>
         <div><label style={lbl}>Field</label><input style={{ ...inp, marginBottom: 0 }} value={form.field} onChange={set('field')} required /></div>
-        <div><label style={lbl}>Tools</label><input style={{ ...inp, marginBottom: 0 }} value={form.tools} onChange={set('tools')} required /></div>
+        <div><label style={lbl}>Tools</label><input style={{ ...inp, marginBottom: 0 }} value={form.tools} onChange={set('tools')} placeholder="Figma, React" required /></div>
+        <div><label style={lbl}>Tag</label><input style={{ ...inp, marginBottom: 0 }} value={form.tag} onChange={set('tag')} placeholder="WEB (선택)" /></div>
       </div>
 
       {/* Hero image */}
       <div style={{ marginTop: 14 }}>
         <label style={lbl}>Hero Image</label>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: form.img ? 10 : 14 }}>
-          <input style={{ ...inp, marginBottom: 0, flex: 1 }} value={form.img} onChange={set('img')} placeholder="URL 직접 입력 또는 파일 업로드" />
-          <button type="button" onClick={() => heroRef.current?.click()} disabled={uploadingHero} style={uploadBtn}>
-            {uploadingHero ? 'Uploading…' : '↑ Upload'}
-          </button>
-          <input ref={heroRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleHeroUpload} />
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: heroPreview ? 10 : 14 }}>
+          <input style={{ ...inp, marginBottom: 0, flex: 1 }} value={heroFile ? heroFile.file!.name : form.img} disabled={!!heroFile}
+            onChange={set('img')} placeholder="URL 직접 입력 또는 파일 선택 (저장할 때 업로드)" />
+          <button type="button" onClick={() => heroRef.current?.click()} style={uploadBtn}>↑ Upload</button>
+          <input ref={heroRef} type="file" accept="image/*" style={{ display: 'none' }}
+            onChange={e => { const [item] = pickFiles(e.target.files); if (item) { if (heroFile) revoke([heroFile]); setHeroFile(item) } e.target.value = '' }} />
         </div>
-        {form.img && (
+        {heroPreview && (
           <div style={{ position: 'relative', aspectRatio: '16/7', overflow: 'hidden', borderRadius: 13, background: 'rgba(35,31,26,.06)', marginBottom: 14 }}>
-            <img src={form.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={heroPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {/* 화면에서만 빼고, 실제 파일 삭제는 저장 성공 후 */}
             <button type="button"
-              onClick={async () => { await deleteFromStorage('works', form.img); setForm(f => ({ ...f, img: '' })) }}
+              onClick={() => { if (heroFile) { revoke([heroFile]); setHeroFile(null) } else setForm(f => ({ ...f, img: '' })) }}
               style={{ position: 'absolute', top: 12, right: 12, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
               <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
             </button>
@@ -204,54 +224,33 @@ export default function WorkForm({ initial, onSave, onCancel, onDelete }: Props)
       <textarea style={{ ...inp, height: 480, resize: 'none', overflowY: 'auto', lineHeight: 1.7 }} value={form.desc} onChange={set('desc')} />
 
       {/* Gallery */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
-        <label style={{ ...lbl, marginBottom: 0 }}>Gallery</label>
-        {/* 상세 페이지 갤러리 단 수 (모바일은 3단도 2단으로 표시) */}
-        <div role="radiogroup" aria-label="갤러리 단 수" style={{ display: 'flex', gap: 6 }}>
-          {[1, 2, 3].map(n => (
-            <button key={n} type="button" role="radio" aria-checked={galleryCols === n} onClick={() => setGalleryCols(n)}
-              style={{
-                fontFamily: suit, fontSize: 'var(--fs-label)' as any, padding: '6px 14px', borderRadius: 8, cursor: 'pointer',
-                border: `1px solid ${galleryCols === n ? INK : 'rgba(35,31,26,.2)'}`,
-                background: galleryCols === n ? INK : 'transparent',
-                color: galleryCols === n ? '#FDFBF7' : 'rgba(35,31,26,.6)',
-                fontWeight: galleryCols === n ? 700 : 500,
-              }}>
-              {n}단
-            </button>
-          ))}
-        </div>
-      </div>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 14 }}>
-        {galleryUrls.map((url, i) => (
-          <div key={i} style={{ position: 'relative' }}>
-            <img src={url} alt="" style={{ width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)' }} />
-            <button type="button"
-              onClick={async () => { await deleteFromStorage('works', url); setForm(f => ({ ...f, gallery: f.gallery.split('\n').filter((_, j) => j !== i).join('\n') })) }}
-              style={{ position: 'absolute', top: -10, right: -10, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex' }}>
-              <CircleX size={32} strokeWidth={1} fill="#F33838" color="#fff" />
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={() => galleryRef.current?.click()} disabled={uploadingGallery}
-          style={{ ...uploadBtn, width: 160, height: 120, borderRadius: 13, borderStyle: 'dashed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {uploadingGallery ? 'Uploading…' : '↑ Upload'}
-        </button>
-        <input ref={galleryRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleGalleryUpload} />
-      </div>
+      <label style={lbl}>Gallery Images (끌어서 순서 변경)</label>
+      <SortableThumbs items={gallery} setItems={setGallery} onPick={() => galleryRef.current?.click()} />
+      <input ref={galleryRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+        onChange={e => { const items = pickFiles(e.target.files); setGallery(g => [...g, ...items]); e.target.value = '' }} />
 
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-        {initial && onDelete && (
-          <button type="button" onClick={onDelete} disabled={saving} style={deleteBtn}>Delete</button>
-        )}
-        <button type="submit" disabled={saving}
-          style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
-          {saving ? 'Saving…' : (initial ? 'Update' : 'Create')}
-        </button>
-        <button type="button" onClick={onCancel}
-          style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
-          Cancel
-        </button>
+      {/* 하단: 비공개 (노트와 같은 위치) · 버튼 */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+        <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+          onClick={() => setForm(f => ({ ...f, private: !f.private }))}>
+          {form.private
+            ? <CheckSquare size={20} strokeWidth={1.5} color={INK} />
+            : <Square size={20} strokeWidth={1.5} color="rgba(35,31,26,.35)" />}
+          비공개
+        </label>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+          {initial && onDelete && (
+            <button type="button" onClick={onDelete} disabled={!!saving} style={deleteBtn}>Delete</button>
+          )}
+          <button type="submit" disabled={!!saving}
+            style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
+            {saving ?? (initial ? 'Update' : 'Create')}
+          </button>
+          <button type="button" onClick={handleCancel} disabled={!!saving}
+            style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
+            Cancel
+          </button>
+        </div>
       </div>
     </form>
   )

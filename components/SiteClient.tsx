@@ -38,7 +38,7 @@ export default function SiteClient({ notes, works }: Props) {
   const [projIndex, setProjIndex] = useState(0)
   const [lightbox, setLightbox] = useState<string | null>(null)
 
-  // 서버는 공개 노트만 내려줌 — 같은 브라우저에 어드민 로그인 세션이 있으면
+  // 서버는 공개 노트 · 작업물만 내려줌 — 같은 브라우저에 어드민 로그인 세션이 있으면
   // RLS가 허용하는 비공개 포함 전체를 다시 불러온다 (방문자에겐 아무 일도 없음)
   const [allNotes, setAllNotes] = useState<Note[]>(notes)
   const [allWorks, setAllWorks] = useState<Work[]>(works)
@@ -62,12 +62,14 @@ export default function SiteClient({ notes, works }: Props) {
       setIsAdmin(!!session)
       if (session) {
         fetchAllNotes().then(rows => { if (rows?.length) setAllNotes(rows) })
+        fetchAllWorks().then(rows => { if (rows?.length) setAllWorks(rows) })
       } else {
         setAllNotes(notes)
+        setAllWorks(works)
       }
     })
     return () => subscription.unsubscribe()
-  }, [notes])
+  }, [notes, works])
 
   const logout = async () => { await signOutAdmin() }
 

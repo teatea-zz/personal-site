@@ -35,7 +35,7 @@ export default function ContactSection() {
           }}
         >
           <span style={{ fontFamily: "'Helvetica Neue',Helvetica,Arial,sans-serif", fontWeight: 700, fontSize: 'clamp(24px,3.4vw,34px)', letterSpacing: '-.02em', color: 'currentColor' }}>{label}</span>
-          <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 14, color: 'currentColor', opacity: .6, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 14, color: 'currentColor', opacity: .62, display: 'flex', alignItems: 'center', gap: 4 }}>
             {handle}<ArrowUpRight size={16} strokeWidth={1.5} />
           </span>
         </a>

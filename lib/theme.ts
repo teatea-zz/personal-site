@@ -52,11 +52,13 @@ const light: typeof dark = {
   heading: '#231F1A',
   text: '#231F1A',
   textStrong: '#231F1A',
+  // 텍스트 톤 3단계 — 강조 100% / 본문 82% / 보조 62% (크림 배경 대비 4.59:1, WCAG AA 최소선)
+  // Muted · Faint · Ghost는 기존 호출부 호환용으로 남기되 모두 보조 62%로 통일 (그 아래로 내리면 대비 미달)
   textBody: 'rgba(35,31,26,.82)',
   textDim: 'rgba(35,31,26,.62)',
-  textMuted: 'rgba(35,31,26,.52)',
-  textFaint: 'rgba(35,31,26,.45)',
-  textGhost: 'rgba(35,31,26,.38)',
+  textMuted: 'rgba(35,31,26,.62)',
+  textFaint: 'rgba(35,31,26,.62)',
+  textGhost: 'rgba(35,31,26,.62)',
   hairline: 'rgba(35,31,26,.1)',
   hairlineStrong: 'rgba(35,31,26,.14)',
   btnBorder: 'rgba(35,31,26,.22)',

@@ -44,10 +44,16 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
 
   return (
     <div style={{ maxWidth: 920, margin: '0 auto' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 22 }}>
-        {tabs.map(t => (
-          <button key={t} onClick={() => setFilter(t)} style={t === filter ? tabActive : tabBase}>{t}</button>
-        ))}
+      {/* 필터 탭 + 현재 필터의 콘텐츠 개수 (TYPE 열 위, 탭과 세로 가운데 정렬) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flex: 1 }}>
+          {tabs.map(t => (
+            <button key={t} onClick={() => setFilter(t)} style={t === filter ? tabActive : tabBase}>{t}</button>
+          ))}
+        </div>
+        <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 500, color: T.textDim, width: TYPE_BADGE_W, marginRight: 14, textAlign: 'center', whiteSpace: 'nowrap', flexShrink: 0 }}>
+          {filtered.length}개
+        </span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.textGhost, padding: '0 14px 10px', borderBottom: `1px solid ${T.hairlineStrong}` }}>
         <span>DATE / TITLE</span><span style={{ width: TYPE_BADGE_W, textAlign: 'center' }}>TYPE</span>
@@ -73,7 +79,7 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
             background: 'transparent',
           }}
         >
-          <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'currentColor', opacity: .55 }}>{note.date}</span>
+          <span style={{ fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: 'currentColor', opacity: .62 }}>{note.date}</span>
           <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 600, color: 'currentColor', opacity: .92, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {note.title}
             {/* 비공개 마커 — 관리자 세션에서만 노출되는 글 */}

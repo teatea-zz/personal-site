@@ -41,6 +41,13 @@ create table if not exists works (
   created_at  timestamptz not null default now()
 );
 
+-- 작업물 비공개 (노트와 동일하게 방문자에겐 행 자체를 숨김) — 2026-10-22 추가
+alter table works add column if not exists private boolean not null default false;
+drop policy if exists "public read works" on works;
+drop policy if exists "read works public or authenticated" on works;
+create policy "read works public or authenticated" on works
+  for select using (private = false or auth.role() = 'authenticated');
+
 -- 노트 상세 레이아웃 (text / image-1 / image-2, 기본 text) — 2026-10-21 추가
 alter table notes add column if not exists layout text not null default 'text';
 -- (선택) 기존 습작 · 일상 노트를 이미지 2단으로: update notes set layout = 'image-2' where type in ('습작', '일상');

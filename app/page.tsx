@@ -34,6 +34,7 @@ async function getWorks() {
     const { data, error } = await supabase
       .from('works')
       .select('*')
+      .eq('private', false) // 비공개 작업물 제외 (RLS와 이중 방어) — 관리자는 SiteClient가 다시 불러옴
       .order('year', { ascending: false })
       .order('created_at', { ascending: false })
     if (error || !data?.length) return SEED_WORKS

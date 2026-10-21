@@ -14,6 +14,7 @@ import {
   type NoteInput, type WorkInput,
 } from '@/lib/admin-actions'
 import NoteForm from '@/components/admin/NoteForm'
+import { LEAVE_MESSAGE } from '@/components/admin/form-shared'
 import WorkForm from '@/components/admin/WorkForm'
 
 type Tab = 'notes' | 'works'
@@ -37,6 +38,10 @@ export default function AdminPage() {
   const [userEmail, setUserEmail] = useState(DEV_BYPASS ? 'dev mode' : '')
   const [sortDir, setSortDir] = useState<'recent' | 'oldest'>('recent')
   const [sortOpen, setSortOpen] = useState(false)
+  // 편집 중 저장 안 한 변경 — 탭 전환 시 확인
+  const [dirty, setDirty] = useState(false)
+  const canLeave = () => !dirty || confirm(LEAVE_MESSAGE)
+  useEffect(() => { if (!editNote && !editWork) setDirty(false) }, [editNote, editWork])
 
   const fetchNotes = useCallback(async () => {
     if (DEV_BYPASS) return
@@ -66,8 +71,7 @@ export default function AdminPage() {
   }
 
   async function saveNote(data: NoteInput) {
-    try { await saveNoteAction(data, editNote && editNote !== 'new' ? editNote.id : undefined) }
-    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
+    await saveNoteAction(data, editNote && editNote !== 'new' ? editNote.id : undefined) // 실패 시 throw → 폼이 알림 · 내용 유지
     await fetchNotes()
     setEditNote(null)
   }
@@ -80,8 +84,7 @@ export default function AdminPage() {
   }
 
   async function saveWork(data: WorkInput) {
-    try { await saveWorkAction(data, editWork && editWork !== 'new' ? editWork.id : undefined) }
-    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
+    await saveWorkAction(data, editWork && editWork !== 'new' ? editWork.id : undefined) // 실패 시 throw → 폼이 알림 · 내용 유지
     await fetchWorks()
     setEditWork(null)
   }
@@ -159,8 +162,8 @@ export default function AdminPage() {
 
         {/* Tabs + New button */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 28, alignItems: 'center', flexWrap: 'wrap', rowGap: 12 }}>
-          <button style={tab === 'notes' ? tabActive : tabIdle} onClick={() => { setTab('notes'); setEditNote(null) }}>Notes</button>
-          <button style={tab === 'works' ? tabActive : tabIdle} onClick={() => { setTab('works'); setEditWork(null) }}>Works</button>
+          <button style={tab === 'notes' ? tabActive : tabIdle} onClick={() => { if (!canLeave()) return; setTab('notes'); setEditNote(null); setEditWork(null) }}>Notes</button>
+          <button style={tab === 'works' ? tabActive : tabIdle} onClick={() => { if (!canLeave()) return; setTab('works'); setEditWork(null); setEditNote(null) }}>Works</button>
           {((tab === 'notes' && !editNote) || (tab === 'works' && !editWork)) && (
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14 }}>
               <span style={countStyle}>총 {tab === 'notes' ? notes.length : works.length}개의 {tab === 'notes' ? '노트' : '작업'}</span>
@@ -203,6 +206,7 @@ export default function AdminPage() {
                     initial={editNote !== 'new' ? editNote : undefined}
                     onSave={saveNote}
                     onCancel={() => setEditNote(null)}
+                    onDirtyChange={setDirty}
                   />
                 </div>
               </div>
@@ -247,6 +251,7 @@ export default function AdminPage() {
                     initial={editWork !== 'new' ? editWork : undefined}
                     onSave={saveWork}
                     onCancel={() => setEditWork(null)}
+                    onDirtyChange={setDirty}
                   />
                 </div>
               </div>
@@ -259,7 +264,7 @@ export default function AdminPage() {
                   {sortedWorks.map(w => (
                     <div key={w.id} className="adm-works-row">
                       <div className="adm-col-thumb"><img src={w.img} alt="" style={{ width: 56, height: 42, objectFit: 'cover', borderRadius: 13, border: `1px solid rgba(35,31,26,.1)` }} /></div>
-                      <span className="adm-col-title" style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: INK }}>{w.title}</span>
+                      <span className="adm-col-title" style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: w.private ? `rgba(35,31,26,.4)` : INK }}>{w.title}{w.private ? ' · 비공개' : ''}</span>
                       <span className="adm-col-role" style={{ fontFamily: suit, fontSize: 'var(--fs-role)' as any, color: `rgba(35,31,26,.5)` }}>{w.role}</span>
                       <span className="adm-col-year" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, color: `rgba(35,31,26,.45)` }}>{w.year}</span>
                       <div className="adm-col-actions" style={{ display: 'flex', gap: 6 }}>
