@@ -4,6 +4,9 @@ import { ArrowUpRight } from 'lucide-react'
 import type { Note } from '@/types/database'
 import { T } from '@/lib/theme'
 
+// SamePage 링크 주소 — 여기에 URL을 넣으세요
+const SAMEPAGE_URL = ''
+
 const TYPE_EN: Record<string, string> = { '노트': 'Note', '초고': 'Draft', '습작': 'Study', '독서': 'Reading', '로그': 'Log', '회고': 'Retro', '일상': 'Daily' }
 
 interface Props {
@@ -25,12 +28,29 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
         color: T.heroText,
         boxShadow: T.heroShadow,
       }}>
-        <h1 style={{ fontFamily: "'Geist',ui-monospace,monospace", fontWeight: 800, fontSize: 'clamp(50px,17.5vw,96px)', lineHeight: 1, letterSpacing: '-.02em', margin: 0, whiteSpace: 'nowrap', color: '#FF5E19' }}>lalahyun</h1>
+        <h1 style={{ fontFamily: "'Geist',ui-monospace,monospace", fontWeight: 800, fontSize: 'clamp(50px,17.5vw,96px)', lineHeight: 1, letterSpacing: '-.02em', margin: 0, whiteSpace: 'nowrap', color: '#FF7029' }}>lalahyun</h1>
 
         <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13.5, fontWeight: 450, lineHeight: 1.65, color: T.heroTextDim, margin: '16px 0 4px', maxWidth: '44ch' }}>
-          UX/UI Designer, Builder<br />
-          에이전트 코딩으로, 프론트엔드 구현까지 함께 만들어갑니다.<br />
-          ㅡ 첫 정식 서비스: SamePage '우리는 지금 같은 페이지에 있네요'
+          UX/UI DESIGNER<br />
+          기술이 발전할수록 좁아지는 선택지 앞에서,<br />
+          디지털이 낯선 사람도 선택할 수 있는 대안을 만듭니다.<br />
+          <img
+            src="https://samepage-book.vercel.app/icon.png"
+            alt=""
+            width={16}
+            height={16}
+            style={{ display: 'inline-block', width: 16, height: 16, verticalAlign: '-3px', marginRight: 6 }}
+          />
+          {' '}
+          <a
+            href={SAMEPAGE_URL || 'https://samepage-book.vercel.app/'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover-accent"
+            style={{ color: 'inherit', textDecoration: 'underline', textUnderlineOffset: 3 }}
+          >
+            SamePage &apos;우리는 지금 같은 페이지에 있네요&apos;
+          </a>
         </p>
 
         <div style={{ marginTop: 16, borderTop: `1px solid ${T.heroHairline}` }}>
@@ -44,7 +64,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
                 textAlign: 'left',
                 border: 0,
                 borderBottom: `1px solid ${T.heroHairline}`,
-                padding: '13px 14px',
+                padding: '16px 14px',
                 cursor: 'pointer',
                 display: 'block',
                 color: T.heroText,
@@ -57,24 +77,20 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
                   fontFamily: "'Geist',ui-monospace,monospace",
                   fontSize: 12, fontWeight: 500,
                   color: 'currentColor',
-                  opacity: .96,
                 }}>{note.date}</span>
-                <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 450, color: 'currentColor', opacity: .5 }}>
+                <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 450, color: 'currentColor', opacity: .75 }}>
                   {TYPE_EN[note.type] || note.type}
                 </span>
               </div>
               <div style={{
                 fontFamily: "'SUIT Variable',sans-serif",
-                fontSize: 14, fontWeight: 600, marginTop: 5,
+                fontSize: 15, fontWeight: 600, marginTop: 5,
                 color: 'currentColor',
-                opacity: .9,
               }}>
                 {note.title}
                 {/* 비공개 마커 — 관리자 세션에서만 노출되는 글 */}
                 {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 3, verticalAlign: 'text-top' }} />}
-              </div>
-              <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 500, marginTop: 2, color: 'currentColor', opacity: .5 }}>{note.sub}</div>
-            </button>
+              </div>            </button>
           ))}
         </div>
 

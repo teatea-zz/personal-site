@@ -63,25 +63,25 @@ const light: typeof dark = {
   cardBg: 'rgba(255,255,255,.72)',
   cardBorder: 'rgba(35,31,26,.1)',
   cardShadow: '0 24px 70px -34px rgba(35,31,26,.22)',
-  sheetBg: 'rgba(253,251,247,.94)',
+  sheetBg: '#FDFBF7',
   sheetBorder: 'rgba(35,31,26,.12)',
   sheetShadow: '0 -24px 80px -30px rgba(35,31,26,.28)',
-  socialBg: '#FEFDFB',
+  socialBg: 'rgba(254,253,251,.7)', // 반투명 — 홈카드와 동일하게 backdrop blur가 보이도록
   socialFg: 'rgba(35,31,26,.62)',
   imgWell: 'rgba(35,31,26,.06)',
-  statCellBg: '#FFFFFF',
+  statCellBg: '#FDFBF7',
   statGridBg: 'rgba(35,31,26,.12)',
   // 홈카드 (라이트: 화이트 카드 + INK 텍스트, 그림자 없이 테두리만 — 소셜바와 동일한 룩)
-  heroBg: '#FEFDFB',
+  heroBg: 'rgba(254,253,251,.7)', // 반투명 — 배경 사진 위 backdrop blur가 보이도록
   heroBorder: 'rgba(35,31,26,.14)',
   heroShadow: 'none',
   heroHeading: '#231F1A',
   heroText: '#231F1A',
-  heroTextDim: 'rgba(35,31,26,.62)',
+  heroTextDim: 'rgba(35,31,26,.75)', // 배경 사진 위 반투명 카드에서 4.5:1 이상 (최소 .70)
   heroMeta: 'rgba(35,31,26,.52)',
-  heroGhost: 'rgba(35,31,26,.38)',
-  heroHairline: 'rgba(35,31,26,.1)',
-  heroBtnBorder: 'rgba(35,31,26,.22)',
+  heroGhost: 'rgba(35,31,26,.75)',
+  heroHairline: '#ffffff',
+  heroBtnBorder: '#ffffff',
   heroBtnText: '#231F1A',
 }
 

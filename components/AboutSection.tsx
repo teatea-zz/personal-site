@@ -2,8 +2,6 @@
 
 import { T } from '@/lib/theme'
 
-const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
-
 export default function AboutSection() {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(20px,3vw,44px)', maxWidth: 1040, margin: '0 auto' }}>
@@ -12,16 +10,16 @@ export default function AboutSection() {
           <img
             src="https://picsum.photos/seed/jiwoo-portrait-3/600/800"
             alt=""
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: IMG_FILTER }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 280 }}>
         <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: 'clamp(26px,3.8vw,42px)', lineHeight: 1.18, letterSpacing: '-.025em', margin: '0 0 18px', color: T.heading }}>
-          공개적으로 기록하는 디자이너
+          사용자의 망설임을<br />주체적인 선택으로 바꾸는 UX/UI 디자이너
         </h2>
         <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, lineHeight: 1.8, color: T.textBody, margin: '0 0 16px', maxWidth: '58ch' }}>
-          저는 디자이너이자 영원한 학생입니다. 이 사이트는 절반은 포트폴리오, 절반은 공개 노트예요. 완성한 작업 옆에 습작과 초고, 매일의 기록을 함께 둡니다 — 원래 그렇게 만들어지니까요.
+          기술이 발전할수록 좁아지는 선택지 앞에서,<br />누구나 자기만의 속도로 탐색하고 시도할 수 있는 디지털 경험을 만듭니다.
         </p>
         <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, lineHeight: 1.8, color: T.textBody, margin: '0 0 28px', maxWidth: '58ch' }}>
           시스템과 타이포그래피, 그리고 새로움이 사라진 뒤에도 오래 읽히는 것에 마음을 씁니다. 배운 것 중 간직할 만한 것은 노트로 남깁니다.

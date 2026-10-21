@@ -32,10 +32,10 @@ function sheetTitle(view: View, notes: Note[], works: Work[], noteIndex: number,
     const note = notes[noteIndex]
     if (!note) return ''
     const num = String(notes.length - noteIndex).padStart(3, '0')
-    return `${TYPE_EN[note.type] || note.type} N${num}`
+    return `${TYPE_EN[note.type] || note.type} N.${num}`
   }
   if (view === 'project') return works[projIndex]?.title || ''
-  const titles: Record<string, string> = { work: 'Selected Work — 04', about: 'About', contact: 'Contact', index: 'Index — Everything' }
+  const titles: Record<string, string> = { work: 'WORK', about: 'ABOUT', contact: 'CONTACT', index: 'INDEX' }
   return view ? (titles[view] || '') : ''
 }
 

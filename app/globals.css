@@ -21,8 +21,8 @@ button { background-color: transparent; }
 }
 
 :root {
-  --accent: #FFDE79;
-  --accent-fg: #0e0e0e;
+  --accent: #EEF860;
+  --accent-fg: #231F1A;
 
   /* Admin 폰트 — 데스크톱 ≥1600px */
   --fs-input: 18px;
@@ -80,12 +80,16 @@ button { background-color: transparent; }
     width: min(calc(100% - 62px), 448px);
     margin-top: 12px;
   }
-  /* 모바일에서는 최근 노트 4개 → 3개 (인라인 display:block보다 우선해야 해서 !important) */
-  .home-note:nth-of-type(4) { display: none !important; }
 }
 
+/* Work 카드: 카드 전체 hover/키보드 포커스 시 이미지 확대 */
 .card-img { transition: transform 0.6s ease; }
-.card-img:hover { transform: scale(1.05); }
+.work-card:hover .card-img,
+.work-card:focus-visible .card-img { transform: scale(1.05); }
+/* 제목: 기본 잉크 → hover 시 브랜드 오렌지 (인라인 기본색보다 우선해야 해서 !important) */
+.work-card-title { transition: color 0.2s ease; }
+.work-card:hover .work-card-title,
+.work-card:focus-visible .work-card-title { color: #FF5A1F !important; }
 .gallery-img { transition: transform 0.5s; }
 .gallery-img:hover { transform: scale(1.04); }
 

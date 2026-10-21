@@ -4,8 +4,6 @@ import { ArrowLeft } from 'lucide-react'
 import type { Work } from '@/types/database'
 import { T } from '@/lib/theme'
 
-const IMG_FILTER = 'grayscale(.15) sepia(.18) saturate(.82) contrast(1.05) brightness(.9)'
-
 interface Props {
   work: Work
   onBack: () => void
@@ -36,7 +34,7 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
       ><ArrowLeft size={16} strokeWidth={1.5} />Work</button>
 
       <div style={{ aspectRatio: '16/9', overflow: 'hidden', borderRadius: 12, border: `1px solid ${T.hairline}`, background: T.imgWell }}>
-        <div style={{ width: '100%', height: '100%', backgroundImage: `url("${work.img}")`, backgroundSize: 'cover', backgroundPosition: 'center', filter: IMG_FILTER }} />
+        <div style={{ width: '100%', height: '100%', backgroundImage: `url("${work.img}")`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, marginTop: 22 }}>
@@ -77,7 +75,7 @@ export default function WorkDetail({ work, onBack, onLightbox }: Props) {
         {work.gallery.map((src, i) => (
           <button key={i} onClick={() => onLightbox(src)} style={{ width: '100%', padding: 0, border: 0, cursor: 'zoom-in', display: 'block', background: 'transparent' }}>
             <div style={{ aspectRatio: '4/3', overflow: 'hidden', borderRadius: 10, border: `1px solid ${T.hairline}`, background: T.imgWell }}>
-              <div className="gallery-img" style={{ width: '100%', height: '100%', backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center', filter: IMG_FILTER }} />
+              <div className="gallery-img" style={{ width: '100%', height: '100%', backgroundImage: `url("${src}")`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
             </div>
           </button>
         ))}
