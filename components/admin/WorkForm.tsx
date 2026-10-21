@@ -44,6 +44,8 @@ interface Props {
   initial?: Work
   onSave: (data: Omit<Work, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
+  /** 넘기면 편집 모드에서 Update 좌측에 Delete 버튼 노출 (메인 사이트 시트용) */
+  onDelete?: () => Promise<void>
 }
 
 const inp: React.CSSProperties = {
@@ -80,6 +82,17 @@ const uploadBtn: React.CSSProperties = {
   whiteSpace: 'nowrap',
 }
 
+const deleteBtn: React.CSSProperties = {
+  background: 'transparent',
+  color: '#c0392b',
+  border: '1px solid rgba(192,57,43,.3)',
+  borderRadius: 13,
+  padding: '10px 22px',
+  fontFamily: mono,
+  fontSize: 'var(--fs-btn)' as any,
+  cursor: 'pointer',
+}
+
 async function deleteFromStorage(bucket: 'works', url: string) {
   try {
     const path = url.split(`/${bucket}/`)[1]
@@ -95,8 +108,9 @@ async function uploadImage(file: File): Promise<string> {
   return supabaseBrowser.storage.from('works').getPublicUrl(path).data.publicUrl
 }
 
-export default function WorkForm({ initial, onSave, onCancel }: Props) {
+export default function WorkForm({ initial, onSave, onCancel, onDelete }: Props) {
   const [form, setForm]               = useState<FormData>(workToForm(initial))
+  const [galleryCols, setGalleryCols] = useState<number>(initial?.gallery_cols ?? 1)
   const [saving, setSaving]           = useState(false)
   const [uploadingHero, setUploadingHero]       = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
@@ -140,6 +154,7 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
       img:         form.img,
       description: form.desc.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
       gallery:     form.gallery.split('\n').map(u => u.trim()).filter(Boolean),
+      gallery_cols: galleryCols,
     })
     setSaving(false)
   }
@@ -152,7 +167,7 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
       <div className="adm-form-grid3">
         <div><label style={lbl}>Title</label><input style={{ ...inp, marginBottom: 0 }} value={form.title} onChange={set('title')} required /></div>
         <div><label style={lbl}>Year</label><input style={{ ...inp, marginBottom: 0 }} value={form.year} onChange={set('year')} placeholder="2026" required /></div>
-        <div><label style={lbl}>Tag</label><input style={{ ...inp, marginBottom: 0 }} value={form.tag} onChange={set('tag')} placeholder="WEB" required /></div>
+        <div><label style={lbl}>Tag</label><input style={{ ...inp, marginBottom: 0 }} value={form.tag} onChange={set('tag')} placeholder="WEB (선택)" /></div>
       </div>
 
       {/* Row 2: Role / Field / Tools */}
@@ -189,7 +204,24 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
       <textarea style={{ ...inp, height: 480, resize: 'none', overflowY: 'auto', lineHeight: 1.7 }} value={form.desc} onChange={set('desc')} />
 
       {/* Gallery */}
-      <label style={lbl}>Gallery</label>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
+        <label style={{ ...lbl, marginBottom: 0 }}>Gallery</label>
+        {/* 상세 페이지 갤러리 단 수 (모바일은 3단도 2단으로 표시) */}
+        <div role="radiogroup" aria-label="갤러리 단 수" style={{ display: 'flex', gap: 6 }}>
+          {[1, 2, 3].map(n => (
+            <button key={n} type="button" role="radio" aria-checked={galleryCols === n} onClick={() => setGalleryCols(n)}
+              style={{
+                fontFamily: suit, fontSize: 'var(--fs-label)' as any, padding: '6px 14px', borderRadius: 8, cursor: 'pointer',
+                border: `1px solid ${galleryCols === n ? INK : 'rgba(35,31,26,.2)'}`,
+                background: galleryCols === n ? INK : 'transparent',
+                color: galleryCols === n ? '#FDFBF7' : 'rgba(35,31,26,.6)',
+                fontWeight: galleryCols === n ? 700 : 500,
+              }}>
+              {n}단
+            </button>
+          ))}
+        </div>
+      </div>
       <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 14 }}>
         {galleryUrls.map((url, i) => (
           <div key={i} style={{ position: 'relative' }}>
@@ -209,6 +241,9 @@ export default function WorkForm({ initial, onSave, onCancel }: Props) {
       </div>
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+        {initial && onDelete && (
+          <button type="button" onClick={onDelete} disabled={saving} style={deleteBtn}>Delete</button>
+        )}
         <button type="submit" disabled={saving}
           style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
           {saving ? 'Saving…' : (initial ? 'Update' : 'Create')}

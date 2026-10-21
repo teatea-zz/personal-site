@@ -3,9 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { supabaseBrowser } from '@/lib/supabase-browser'
-
-const ADMIN_ID = process.env.NEXT_PUBLIC_ADMIN_ID ?? 'admin'
+import { signInAdmin } from '@/lib/admin-actions'
 
 const BG   = '#FDFBF7'
 const INK  = '#231F1A'
@@ -23,17 +21,9 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    if (id !== ADMIN_ID) {
-      setError('아이디 또는 비밀번호가 올바르지 않습니다')
-      setLoading(false)
-      return
-    }
-    const { error } = await supabaseBrowser.auth.signInWithPassword({
-      email: `${ADMIN_ID}@admin.local`,
-      password,
-    })
-    if (error) {
-      setError('아이디 또는 비밀번호가 올바르지 않습니다')
+    const err = await signInAdmin(id, password)
+    if (err) {
+      setError(err)
       setLoading(false)
       return
     }

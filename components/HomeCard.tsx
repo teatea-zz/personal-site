@@ -13,9 +13,12 @@ interface Props {
   recentNotes: Note[]
   onOpenNote: (i: number) => void
   onOpenView: (v: string) => void
+  isAdmin: boolean
+  onSecretLogin: () => void
+  onLogout: () => void
 }
 
-export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props) {
+export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin, onSecretLogin, onLogout }: Props) {
   return (
     <div style={{ position: 'relative', zIndex: 3, width: 'min(100%,448px)' }}>
       <div style={{
@@ -125,8 +128,19 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView }: Props)
           ))}
         </div>
 
-        <div style={{ marginTop: 16, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.heroGhost }}>
-          © lalahyun 2026
+        {/* © 더블클릭 = 숨은 어드민 로그인 입구 (커서 · hover 변화 없음) / 로그인 중엔 Logout 표시 */}
+        <div style={{ marginTop: 16, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.heroGhost, userSelect: 'none' }}>
+          <span onDoubleClick={onSecretLogin}>© lalahyun 2026</span>
+          {isAdmin && (
+            <>
+              {' · '}
+              <button
+                type="button"
+                onClick={onLogout}
+                style={{ font: 'inherit', color: '#fff', background: '#FF7029', border: 0, padding: 0, cursor: 'pointer' }}
+              >Logout</button>
+            </>
+          )}
         </div>
       </div>
     </div>

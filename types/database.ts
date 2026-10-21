@@ -11,8 +11,12 @@ export type Note = {
   body: Block[]
   images: string[]
   private: boolean
+  /** 상세 레이아웃 — text: 글 / image-1: 이미지 1단(이미지 위, 글 아래) / image-2: 이미지 2단(작업물 상세와 동일). 없으면 text */
+  layout?: NoteLayout
   created_at: string
 }
+
+export type NoteLayout = 'text' | 'image-1' | 'image-2'
 
 export type NoteInsert = Omit<Note, 'id' | 'created_at'>
 export type NoteUpdate = Partial<NoteInsert>
@@ -28,6 +32,8 @@ export type Work = {
   img: string
   description: Block[]
   gallery: string[]
+  /** 갤러리 단 수 1~3 (모바일은 최대 2). 컬럼 추가 전 데이터 · 시드는 없을 수 있어 1로 취급 */
+  gallery_cols?: number
   created_at: string
 }
 

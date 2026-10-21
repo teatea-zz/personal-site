@@ -7,6 +7,12 @@ import { ChevronDown, ExternalLink, Plus } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
 import type { Note, Work } from '@/types/database'
 import { SEED_NOTES, SEED_WORKS } from '@/lib/data'
+import {
+  fetchAllNotes, fetchAllWorks, signOutAdmin,
+  saveNote as saveNoteAction, saveWork as saveWorkAction,
+  deleteNote as deleteNoteAction, deleteWork as deleteWorkAction,
+  type NoteInput, type WorkInput,
+} from '@/lib/admin-actions'
 import NoteForm from '@/components/admin/NoteForm'
 import WorkForm from '@/components/admin/WorkForm'
 
@@ -34,13 +40,13 @@ export default function AdminPage() {
 
   const fetchNotes = useCallback(async () => {
     if (DEV_BYPASS) return
-    const { data } = await supabaseBrowser.from('notes').select('*').order('date', { ascending: false })
+    const data = await fetchAllNotes()
     if (data) setNotes(data)
   }, [])
 
   const fetchWorks = useCallback(async () => {
     if (DEV_BYPASS) return
-    const { data } = await supabaseBrowser.from('works').select('*').order('year', { ascending: false }).order('created_at', { ascending: false })
+    const data = await fetchAllWorks()
     if (data) setWorks(data)
   }, [])
 
@@ -55,17 +61,13 @@ export default function AdminPage() {
   }, [fetchNotes, fetchWorks])
 
   async function signOut() {
-    await supabaseBrowser.auth.signOut()
+    await signOutAdmin()
     router.push('/admin/login')
   }
 
-  async function saveNote(data: Omit<Note, 'id' | 'created_at'>) {
-    const q = supabaseBrowser.from('notes') as any // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (editNote && editNote !== 'new') {
-      await q.update(data).eq('id', editNote.id)
-    } else {
-      await q.insert(data)
-    }
+  async function saveNote(data: NoteInput) {
+    try { await saveNoteAction(data, editNote && editNote !== 'new' ? editNote.id : undefined) }
+    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
     await fetchNotes()
     setEditNote(null)
   }
@@ -73,23 +75,13 @@ export default function AdminPage() {
   async function deleteNote(id: number) {
     if (!confirm('삭제할까요?')) return
     const note = notes.find(n => n.id === id)
-    if (note) {
-      const bodyUrls = (note.body ?? []).filter((b: any) => b.type === 'image').map((b: any) => b.url)
-      const imageUrls = [...bodyUrls, ...(note.images ?? [])]
-      const paths = imageUrls.map((url: string) => url.split('/notes/')[1]).filter(Boolean)
-      if (paths.length) await supabaseBrowser.storage.from('notes').remove(paths)
-    }
-    await supabaseBrowser.from('notes').delete().eq('id', id)
+    if (note) await deleteNoteAction(note)
     await fetchNotes()
   }
 
-  async function saveWork(data: Omit<Work, 'id' | 'created_at'>) {
-    const q = supabaseBrowser.from('works') as any // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (editWork && editWork !== 'new') {
-      await q.update(data).eq('id', editWork.id)
-    } else {
-      await q.insert(data)
-    }
+  async function saveWork(data: WorkInput) {
+    try { await saveWorkAction(data, editWork && editWork !== 'new' ? editWork.id : undefined) }
+    catch (e) { alert(`저장에 실패했어요.\n${(e as Error).message}`); return }
     await fetchWorks()
     setEditWork(null)
   }
@@ -97,12 +89,7 @@ export default function AdminPage() {
   async function deleteWork(id: number) {
     if (!confirm('삭제할까요?')) return
     const work = works.find(w => w.id === id)
-    if (work) {
-      const urls = [work.img, ...(work.gallery ?? [])].filter(Boolean)
-      const paths = urls.map((url: string) => url.split('/works/')[1]).filter(Boolean)
-      if (paths.length) await supabaseBrowser.storage.from('works').remove(paths)
-    }
-    await supabaseBrowser.from('works').delete().eq('id', id)
+    if (work) await deleteWorkAction(work)
     await fetchWorks()
   }
 

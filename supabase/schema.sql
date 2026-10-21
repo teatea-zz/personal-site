@@ -41,6 +41,13 @@ create table if not exists works (
   created_at  timestamptz not null default now()
 );
 
+-- 노트 상세 레이아웃 (text / image-1 / image-2, 기본 text) — 2026-10-21 추가
+alter table notes add column if not exists layout text not null default 'text';
+-- (선택) 기존 습작 · 일상 노트를 이미지 2단으로: update notes set layout = 'image-2' where type in ('습작', '일상');
+
+-- 갤러리 단 수 (1~3, 기본 1단) — 2026-10-21 추가
+alter table works add column if not exists gallery_cols smallint not null default 1;
+
 -- body/description 컬럼을 text[] → jsonb 로 변경 (이미 jsonb면 무시됨)
 do $$ begin
   if (select data_type from information_schema.columns

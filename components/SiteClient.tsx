@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import type { Note, Work } from '@/types/database'
 import { supabaseBrowser } from '@/lib/supabase-browser'
+import { fetchAllNotes, fetchAllWorks, signOutAdmin } from '@/lib/admin-actions'
 import HomeCard from './HomeCard'
+import AdminLoginModal from './AdminLoginModal'
 import Sheet from './Sheet'
 import Lightbox from './Lightbox'
 import SocialBar from './SocialBar'
@@ -39,15 +41,35 @@ export default function SiteClient({ notes, works }: Props) {
   // 서버는 공개 노트만 내려줌 — 같은 브라우저에 어드민 로그인 세션이 있으면
   // RLS가 허용하는 비공개 포함 전체를 다시 불러온다 (방문자에겐 아무 일도 없음)
   const [allNotes, setAllNotes] = useState<Note[]>(notes)
+  const [allWorks, setAllWorks] = useState<Work[]>(works)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+
+  // 시트에서 추가 · 수정 · 삭제 후 최신 목록 재조회 (새 목록을 반환해 시트가 위치를 다시 찾게 함)
+  const refresh = useCallback(async () => {
+    const [n, w] = await Promise.all([fetchAllNotes(), fetchAllWorks()])
+    const nextNotes = n ?? allNotes
+    const nextWorks = w ?? allWorks
+    setAllNotes(nextNotes)
+    setAllWorks(nextWorks)
+    return { notes: nextNotes, works: nextWorks }
+  }, [allNotes, allWorks])
+
+  // 로그인 / 로그아웃을 즉시 반영 — 로그인 시 비공개 포함 재조회, 로그아웃 시 공개 노트로 복귀
   useEffect(() => {
     if (!HAS_SUPABASE) return
-    supabaseBrowser.auth.getSession().then(async ({ data }) => {
-      if (!data.session) return
-      const { data: rows } = await supabaseBrowser
-        .from('notes').select('*').order('date', { ascending: false })
-      if (rows?.length) setAllNotes(rows)
+    const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange((_event, session) => {
+      setIsAdmin(!!session)
+      if (session) {
+        fetchAllNotes().then(rows => { if (rows?.length) setAllNotes(rows) })
+      } else {
+        setAllNotes(notes)
+      }
     })
+    return () => subscription.unsubscribe()
   }, [notes])
+
+  const logout = async () => { await signOutAdmin() }
 
   const openNote = (i: number) => { setNoteIndex(i); setView('note') }
   const openView = (v: string) => setView(v as View)
@@ -79,8 +101,8 @@ export default function SiteClient({ notes, works }: Props) {
               <div style={{ position: 'absolute', inset: 0, background: '#EF7452', mixBlendMode: 'soft-light', opacity: .16 }} />
               <div style={{ position: 'absolute', inset: 0, background: '#52E3EF', mixBlendMode: 'soft-light', opacity: .3 }} />
             </div>
-            {/* 사진 출처 */}
-            <p style={{
+            {/* 사진 출처 — 홈카드와 겹치는 좁은 화면(≤680px)에선 숨김 (globals.css .photo-credit) */}
+            <p className="photo-credit" style={{
               position: 'fixed', top: 'clamp(12px,2vw,28px)', right: 'clamp(12px,2vw,28px)', zIndex: 20,
               margin: 0, padding: '4px 9px', borderRadius: 8,
               background: 'rgba(254,253,251,.55)',
@@ -114,6 +136,9 @@ export default function SiteClient({ notes, works }: Props) {
           recentNotes={allNotes.slice(0, 3)}
           onOpenNote={openNote}
           onOpenView={openView}
+          isAdmin={isAdmin}
+          onSecretLogin={() => { if (HAS_SUPABASE && !isAdmin) setLoginOpen(true) }}
+          onLogout={logout}
         />
         {/* 데스크톱: 플로팅(fixed) / 모바일: 이 위치(홈카드 아래)에 흐름 배치 */}
         <SpotifyPlayer />
@@ -127,7 +152,9 @@ export default function SiteClient({ notes, works }: Props) {
         noteIndex={noteIndex}
         projIndex={projIndex}
         notes={allNotes}
-        works={works}
+        works={allWorks}
+        isAdmin={isAdmin}
+        onRefresh={refresh}
         onClose={() => setView(null)}
         onOpenNote={openNote}
         onOpenProject={openProject}
@@ -138,6 +165,8 @@ export default function SiteClient({ notes, works }: Props) {
 
       {/* Lightbox */}
       <Lightbox src={lightbox} onClose={() => setLightbox(null)} />
+
+      <AdminLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   )
 }

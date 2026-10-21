@@ -3,9 +3,16 @@
 import { useState, useRef } from 'react'
 import { Square, CheckSquare, ChevronDown, CircleX } from 'lucide-react'
 import { supabaseBrowser } from '@/lib/supabase-browser'
-import type { Note, TextBlock, ImageBlock } from '@/types/database'
+import type { Note, NoteLayout, TextBlock, ImageBlock } from '@/types/database'
 
 const TYPES = ['노트', '로그', '습작', '회고', '일상']
+const LAYOUTS: { value: NoteLayout; label: string }[] = [
+  { value: 'text',    label: '글' },
+  { value: 'image-1', label: '이미지 1단' },
+  { value: 'image-2', label: '이미지 2단' },
+]
+// 타입별 기본 레이아웃 — 습작 · 일상은 이미지 2단, 나머지는 글
+const defaultLayout = (type: string): NoteLayout => (type === '습작' || type === '일상' ? 'image-2' : 'text')
 const INK   = '#231F1A'
 const mono  = "'Geist',ui-monospace,monospace"
 const suit  = "'SUIT Variable',sans-serif"
@@ -17,6 +24,7 @@ type FormData = {
   sub: string
   body: string
   private: boolean
+  layout: NoteLayout
 }
 
 function today(): string {
@@ -38,6 +46,7 @@ function noteToForm(note?: Partial<Note>): FormData {
       return b.type === 'text' ? b.content : null
     }).filter(Boolean).join('\n\n'),
     private: note?.private ?? false,
+    layout:  note?.layout  ?? defaultLayout(note?.type ?? '노트'),
   }
 }
 
@@ -45,6 +54,8 @@ interface Props {
   initial?: Note
   onSave: (data: Omit<Note, 'id' | 'created_at'>) => Promise<void>
   onCancel: () => void
+  /** 넘기면 편집 모드에서 Update 좌측에 Delete 버튼 노출 (메인 사이트 시트용) */
+  onDelete?: () => Promise<void>
 }
 
 const inp: React.CSSProperties = {
@@ -81,7 +92,18 @@ const uploadBtn: React.CSSProperties = {
   whiteSpace: 'nowrap',
 }
 
-export default function NoteForm({ initial, onSave, onCancel }: Props) {
+const deleteBtn: React.CSSProperties = {
+  background: 'transparent',
+  color: '#c0392b',
+  border: '1px solid rgba(192,57,43,.3)',
+  borderRadius: 13,
+  padding: '10px 22px',
+  fontFamily: mono,
+  fontSize: 'var(--fs-btn)' as any,
+  cursor: 'pointer',
+}
+
+export default function NoteForm({ initial, onSave, onCancel, onDelete }: Props) {
   const [form, setForm]   = useState<FormData>(noteToForm(initial))
   const [typeOpen, setTypeOpen] = useState(false)
   const [images, setImages] = useState<string[]>(initial?.images ?? [])
@@ -130,13 +152,14 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
       body:    form.body.split(/\n{2,}/).map(p => p.trim()).filter(Boolean).map(content => ({ type: 'text' as const, content })),
       images,
       private: form.private,
+      layout:  form.layout,
     })
     setSaving(false)
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="adm-form-grid2">
+      <div className="adm-form-grid3eq">
         <div>
           <label style={lbl}>Type</label>
           <div style={{ position: 'relative' }}>
@@ -150,13 +173,32 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
               <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top left', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
                 {TYPES.map(t => (
                   <button key={t} type="button"
-                    onClick={() => { setForm(f => ({ ...f, type: t, ...(t === '일상' && !f.private ? { private: true } : {}) })); setTypeOpen(false) }}
+                    onClick={() => { setForm(f => ({ ...f, type: t, layout: defaultLayout(t), ...(t === '일상' && !f.private ? { private: true } : {}) })); setTypeOpen(false) }}
                     style={{ width: '100%', textAlign: 'left', padding: '10px 16px', fontFamily: suit, fontSize: 'var(--fs-input)' as any, fontWeight: t === form.type ? 600 : 400, color: t === form.type ? INK : 'rgba(35,31,26,.55)', background: t === form.type ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                     {t}
                   </button>
                 ))}
               </div>
             )}
+          </div>
+        </div>
+        {/* 상세 레이아웃 — 타입을 고르면 기본값으로 바뀌고, 직접 바꿀 수도 있음 */}
+        <div>
+          <label style={lbl}>Layout</label>
+          <div role="radiogroup" aria-label="상세 레이아웃" style={{ display: 'flex', gap: 4, padding: 4, border: '1px solid rgba(35,31,26,.15)', borderRadius: 13, background: 'rgba(35,31,26,.04)' }}>
+            {LAYOUTS.map(l => {
+              const on = form.layout === l.value
+              return (
+                <button key={l.value} type="button" role="radio" aria-checked={on} onClick={() => setForm(f => ({ ...f, layout: l.value }))}
+                  style={{
+                    flex: 1, whiteSpace: 'nowrap', padding: '7px 6px', borderRadius: 9, border: 0, cursor: 'pointer',
+                    fontFamily: suit, fontSize: 'var(--fs-label)' as any, fontWeight: on ? 700 : 500,
+                    background: on ? INK : 'transparent', color: on ? '#FDFBF7' : 'rgba(35,31,26,.6)',
+                  }}>
+                  {l.label}
+                </button>
+              )
+            })}
           </div>
         </div>
         <div>
@@ -205,6 +247,9 @@ export default function NoteForm({ initial, onSave, onCancel }: Props) {
           비공개
         </label>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+          {initial && onDelete && (
+            <button type="button" onClick={onDelete} disabled={saving} style={deleteBtn}>Delete</button>
+          )}
           <button type="submit" disabled={saving}
             style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
             {saving ? 'Saving…' : (initial ? 'Update' : 'Create')}
