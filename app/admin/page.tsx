@@ -98,7 +98,7 @@ export default function AdminPage() {
 
   const tabActive: React.CSSProperties = {
     fontFamily: mono, fontSize: 'var(--fs-btn)' as any,
-    padding: '8px 14px', borderRadius: 13,
+    padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-12)',
     border: '1px solid var(--accent)',
     background: 'var(--accent)', color: INK,
     cursor: 'pointer', transition: 'background-color .15s ease-out, border-color .15s ease-out, color .15s ease-out',
@@ -115,7 +115,7 @@ export default function AdminPage() {
     color: 'rgba(35,31,26,.38)', textTransform: 'uppercase',
   }
   const editBtn: React.CSSProperties = {
-    fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13,
+    fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-12)',
     border: `1px solid rgba(35,31,26,.18)`, background: 'transparent',
     color: `rgba(35,31,26,.7)`, cursor: 'pointer', whiteSpace: 'nowrap',
   }
@@ -126,7 +126,7 @@ export default function AdminPage() {
   }
   const newBtn: React.CSSProperties = {
     background: 'var(--accent)', color: INK, border: 'none',
-    borderRadius: 13, padding: '8px 14px', fontFamily: mono,
+    borderRadius: 'var(--radius-12)', padding: 'var(--space-8) var(--space-16)', fontFamily: mono,
     fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer',
   }
   const countStyle: React.CSSProperties = {
@@ -136,7 +136,7 @@ export default function AdminPage() {
   const sortSelect: React.CSSProperties = {
     fontFamily: suit, fontSize: 'var(--fs-btn)' as any, color: INK,
     background: 'rgba(35,31,26,.04)', border: '1px solid rgba(35,31,26,.18)',
-    borderRadius: 13, padding: '7px 14px', cursor: 'pointer', outline: 'none',
+    borderRadius: 'var(--radius-12)', padding: 'var(--space-8) var(--space-16)', cursor: 'pointer', outline: 'none',
   }
 
   const sortedNotes = [...notes].sort((a, b) =>
@@ -148,45 +148,45 @@ export default function AdminPage() {
     <div style={{ minHeight: '100svh', background: BG, color: INK, fontWeight: 400 }}>
 
       {/* Header */}
-      <div className="adm-header" style={{ borderBottom: `1px solid rgba(35,31,26,.1)`, padding: '14px clamp(16px,3vw,40px)' }}>
+      <div className="adm-header" style={{ borderBottom: `1px solid rgba(35,31,26,.1)`, padding: 'var(--space-16) clamp(var(--space-16),3vw,var(--space-40))' }}>
         <span className="adm-header-email" style={{ fontFamily: suit, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)' }}>{userEmail}</span>
         <Image src="/admin_header_logo.svg" alt="Admin Logo" width={184} height={32} priority />
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'flex-end', flexShrink: 0 }}>
-          <a href="/" target="_blank" rel="noopener" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: '1px solid rgba(35,31,26,.18)', background: 'transparent', color: 'rgba(35,31,26,.55)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>Site <ExternalLink size={16} strokeWidth={1.5} /></a>
-          <button onClick={signOut} style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: '7px 14px', borderRadius: 13, border: `1px solid rgba(35,31,26,.18)`, background: 'transparent', color: 'rgba(35,31,26,.55)', cursor: 'pointer' }}>Sign out</button>
+        <div style={{ display: 'flex', gap: 'var(--space-12)', alignItems: 'center', justifyContent: 'flex-end', flexShrink: 0 }}>
+          <a href="/" target="_blank" rel="noopener" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-12)', border: '1px solid rgba(35,31,26,.18)', background: 'transparent', color: 'rgba(35,31,26,.55)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>Site <ExternalLink size={16} strokeWidth={1.5} /></a>
+          <button onClick={signOut} style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-12)', border: `1px solid rgba(35,31,26,.18)`, background: 'transparent', color: 'rgba(35,31,26,.55)', cursor: 'pointer' }}>Sign out</button>
         </div>
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(20px,4vw,48px) clamp(16px,3vw,24px)' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(var(--space-20),4vw,var(--space-48)) clamp(var(--space-16),3vw,var(--space-24))' }}>
 
         {/* Tabs + New button */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 28, alignItems: 'center', flexWrap: 'wrap', rowGap: 12 }}>
+        <div style={{ display: 'flex', gap: 'var(--space-8)', marginBottom: 'var(--space-28)', alignItems: 'center', flexWrap: 'wrap', rowGap: 'var(--space-12)' }}>
           <button style={tab === 'notes' ? tabActive : tabIdle} onClick={() => { if (!canLeave()) return; setTab('notes'); setEditNote(null); setEditWork(null) }}>Notes</button>
           <button style={tab === 'works' ? tabActive : tabIdle} onClick={() => { if (!canLeave()) return; setTab('works'); setEditWork(null); setEditNote(null) }}>Works</button>
           {((tab === 'notes' && !editNote) || (tab === 'works' && !editWork)) && (
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--space-16)' }}>
               <span style={countStyle}>총 {tab === 'notes' ? notes.length : works.length}개의 {tab === 'notes' ? '노트' : '작업'}</span>
               <div style={{ position: 'relative' }}>
                 {sortOpen && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setSortOpen(false)} />}
                 <button type="button" onClick={() => setSortOpen(o => !o)}
-                  style={{ ...sortSelect, display: 'flex', alignItems: 'center', gap: 24, paddingRight: 36, position: 'relative' }}>
+                  style={{ ...sortSelect, display: 'flex', alignItems: 'center', gap: 'var(--space-24)', paddingRight: 'var(--space-36)', position: 'relative' }}>
                   {sortDir === 'recent' ? '최근등록순' : '오래된순'}
                   <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${sortOpen ? 180 : 0}deg)`, transition: 'transform .2s ease-out', color: 'rgba(35,31,26,.45)' }} />
                 </button>
                 {sortOpen && (
-                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top right', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
+                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top right', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
                     {(['recent', 'oldest'] as const).map(val => (
                       <button key={val} type="button"
                         onClick={() => { setSortDir(val); setSortOpen(false) }}
-                        style={{ width: '100%', textAlign: 'left', padding: '10px 16px', fontFamily: suit, fontSize: 'var(--fs-btn)' as any, fontWeight: val === sortDir ? 600 : 400, color: val === sortDir ? INK : 'rgba(35,31,26,.55)', background: val === sortDir ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        style={{ width: '100%', textAlign: 'left', padding: 'var(--space-12) var(--space-16)', fontFamily: suit, fontSize: 'var(--fs-btn)' as any, fontWeight: val === sortDir ? 600 : 400, color: val === sortDir ? INK : 'rgba(35,31,26,.55)', background: val === sortDir ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                         {val === 'recent' ? '최근등록순' : '오래된순'}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              <button onClick={() => tab === 'notes' ? setEditNote('new') : setEditWork('new')} style={{ ...newBtn, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <button onClick={() => tab === 'notes' ? setEditNote('new') : setEditWork('new')} style={{ ...newBtn, display: 'flex', alignItems: 'center', gap: 'var(--space-8)' }}>
                 <Plus size={16} strokeWidth={1.5} /> New {tab === 'notes' ? 'Note' : 'Work'}
               </button>
             </div>
@@ -197,11 +197,11 @@ export default function AdminPage() {
         {tab === 'notes' && (
           <>
             {editNote ? (
-              <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
-                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
+              <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
+                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: 'var(--space-12) clamp(var(--space-16),3vw,var(--space-28))', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
                   {editNote === 'new' ? 'NEW NOTE' : 'EDIT NOTE'}
                 </div>
-                <div style={{ padding: 'clamp(18px,3vw,28px)' as any }}>
+                <div style={{ padding: 'clamp(var(--space-16),3vw,var(--space-28))' as any }}>
                   <NoteForm
                     initial={editNote !== 'new' ? editNote : undefined}
                     onSave={saveNote}
@@ -212,7 +212,7 @@ export default function AdminPage() {
               </div>
             ) : (
               <>
-                <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.05)' }}>
+                <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.05)' }}>
                   <div className="adm-notes-head" style={colHead}>
                     <span>Date</span><span>Title</span><span>Type</span><span></span>
                   </div>
@@ -221,16 +221,16 @@ export default function AdminPage() {
                       <span className="adm-col-date" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, color: `rgba(35,31,26,.45)`, opacity: n.private ? .5 : 1, textDecoration: n.private ? 'line-through' : undefined }}>{n.date}</span>
                       <span className="adm-col-title" style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: n.private ? `rgba(35,31,26,.4)` : INK }}>{n.title}</span>
                       <span className="adm-col-type" style={{ fontFamily: suit, fontSize: 'var(--fs-label)' as any }}>
-                        <span style={{ display: 'inline-block', fontWeight: 600, color: 'rgba(35,31,26,.5)', border: '1px solid currentColor', borderRadius: 5, padding: '3px 9px', whiteSpace: 'nowrap' }}>{n.type}</span>
+                        <span style={{ display: 'inline-block', fontWeight: 600, color: 'rgba(35,31,26,.5)', border: '1px solid currentColor', borderRadius: 'var(--radius-4)', padding: 'var(--space-4) var(--space-8)', whiteSpace: 'nowrap' }}>{n.type}</span>
                       </span>
-                      <div className="adm-col-actions" style={{ display: 'flex', gap: 6 }}>
+                      <div className="adm-col-actions" style={{ display: 'flex', gap: 'var(--space-8)' }}>
                         <button onClick={() => setEditNote(n)} style={editBtn}>Edit</button>
                         <button onClick={() => deleteNote(n.id)} style={delBtn}>Del</button>
                       </div>
                     </div>
                   ))}
                   {notes.length === 0 && (
-                    <div style={{ padding: 32, fontFamily: suit, fontSize: 'var(--fs-title)' as any, color: `rgba(35,31,26,.3)`, textAlign: 'center' }}>노트가 없습니다</div>
+                    <div style={{ padding: 'var(--space-32)', fontFamily: suit, fontSize: 'var(--fs-title)' as any, color: `rgba(35,31,26,.3)`, textAlign: 'center' }}>노트가 없습니다</div>
                   )}
                 </div>
               </>
@@ -242,11 +242,11 @@ export default function AdminPage() {
         {tab === 'works' && (
           <>
             {editWork ? (
-              <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
-                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: '10px clamp(18px,3vw,28px)', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
+              <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.06)' }}>
+                <div style={{ fontFamily: mono, fontSize: 'var(--fs-label)' as any, color: 'rgba(35,31,26,.4)', padding: 'var(--space-12) clamp(var(--space-16),3vw,var(--space-28))', borderBottom: '1px solid rgba(35,31,26,.1)' }}>
                   {editWork === 'new' ? 'NEW WORK' : 'EDIT WORK'}
                 </div>
-                <div style={{ padding: 'clamp(18px,3vw,28px)' as any }}>
+                <div style={{ padding: 'clamp(var(--space-16),3vw,var(--space-28))' as any }}>
                   <WorkForm
                     initial={editWork !== 'new' ? editWork : undefined}
                     onSave={saveWork}
@@ -257,24 +257,24 @@ export default function AdminPage() {
               </div>
             ) : (
               <>
-                <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 13, overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.05)' }}>
+                <div style={{ background: '#fff', border: `1px solid rgba(35,31,26,.1)`, borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 2px 12px rgba(35,31,26,.05)' }}>
                   <div className="adm-works-head" style={colHead}>
                     <span>Thumb</span><span>Title</span><span>Role</span><span>Year</span><span></span>
                   </div>
                   {sortedWorks.map(w => (
                     <div key={w.id} className="adm-works-row">
-                      <div className="adm-col-thumb"><img src={w.img} alt="" style={{ width: 56, height: 42, objectFit: 'cover', borderRadius: 13, border: `1px solid rgba(35,31,26,.1)` }} /></div>
+                      <div className="adm-col-thumb"><img src={w.img} alt="" style={{ width: 56, height: 42, objectFit: 'cover', borderRadius: 'var(--radius-12)', border: `1px solid rgba(35,31,26,.1)` }} /></div>
                       <span className="adm-col-title" style={{ fontFamily: suit, fontSize: 'var(--fs-title)' as any, fontWeight: 600, color: w.private ? `rgba(35,31,26,.4)` : INK }}>{w.title}{w.private ? ' · 비공개' : ''}</span>
                       <span className="adm-col-role" style={{ fontFamily: suit, fontSize: 'var(--fs-role)' as any, color: `rgba(35,31,26,.5)` }}>{w.role}</span>
                       <span className="adm-col-year" style={{ fontFamily: mono, fontSize: 'var(--fs-btn)' as any, color: `rgba(35,31,26,.45)` }}>{w.year}</span>
-                      <div className="adm-col-actions" style={{ display: 'flex', gap: 6 }}>
+                      <div className="adm-col-actions" style={{ display: 'flex', gap: 'var(--space-8)' }}>
                         <button onClick={() => setEditWork(w)} style={editBtn}>Edit</button>
                         <button onClick={() => deleteWork(w.id)} style={delBtn}>Del</button>
                       </div>
                     </div>
                   ))}
                   {works.length === 0 && (
-                    <div style={{ padding: 32, fontFamily: suit, fontSize: 'var(--fs-title)' as any, color: `rgba(35,31,26,.3)`, textAlign: 'center' }}>작업이 없습니다</div>
+                    <div style={{ padding: 'var(--space-32)', fontFamily: suit, fontSize: 'var(--fs-title)' as any, color: `rgba(35,31,26,.3)`, textAlign: 'center' }}>작업이 없습니다</div>
                   )}
                 </div>
               </>

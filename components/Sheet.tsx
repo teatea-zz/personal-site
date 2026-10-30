@@ -54,8 +54,8 @@ type Editing =
 
 const headerBtn: React.CSSProperties = {
   border: `1px solid ${T.btnBorder}`, color: T.text, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12,
-  padding: '8px 18px', borderRadius: 8, cursor: 'pointer', transition: 'background-color .16s ease-out, color .16s ease-out',
-  display: 'flex', alignItems: 'center', gap: 4,
+  padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-8)', cursor: 'pointer', transition: 'background-color .16s ease-out, color .16s ease-out',
+  display: 'flex', alignItems: 'center', gap: 'var(--space-4)',
 }
 
 export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmin, onRefresh, onClose, onOpenNote, onOpenProject, onBackToWork, onOpenIndex, onLightbox }: Props) {
@@ -147,7 +147,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
       backdropFilter: 'blur(26px) saturate(1.1)',
       WebkitBackdropFilter: 'blur(26px) saturate(1.1)',
       borderTop: `1px solid ${T.sheetBorder}`,
-      borderRadius: '18px 18px 0 0',
+      borderRadius: 'var(--radius-16) var(--radius-16) 0 0',
       boxShadow: open ? T.sheetShadow : 'none',
       display: 'flex',
       flexDirection: 'column',
@@ -155,14 +155,14 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
       pointerEvents: open ? 'auto' : 'none',
       transition: 'transform .48s cubic-bezier(.16,1,.3,1)',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px clamp(16px,3vw,34px)', borderBottom: `1px solid ${T.hairline}`, flex: 'none' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-16) clamp(var(--space-16),3vw,var(--space-32))', borderBottom: `1px solid ${T.hairline}`, flex: 'none' }}>
         <span style={{ fontFamily: view === 'project' && !editing ? "'SUIT Variable',sans-serif" : "'Geist',ui-monospace,monospace", fontSize: 14, fontWeight: 400, color: T.text }}>
           {/* 노트 상세 경로: 상위(INDEX /)는 그레이, 현재 타입(Daily)은 잉크 */}
           {view === 'note' && !editing && title.startsWith('INDEX / ')
             ? <><span style={{ color: T.textDim }}>INDEX /</span> {title.slice('INDEX / '.length)}</>
             : title}
         </span>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
           {/* 목록으로 돌아가기 — 편집 중 / 작업물 상세 / 노트 상세 (시트는 유지) */}
           {(editing || view === 'project' || view === 'note') && (
             <button
@@ -186,7 +186,7 @@ export default function Sheet({ view, noteIndex, projIndex, notes, works, isAdmi
       <div
         className="sheet-body"
         data-split={!editing && (view === 'project' || (view === 'note' && (notes[noteIndex]?.layout ?? 'text') !== 'text')) ? '' : undefined}
-        style={{ padding: 'clamp(18px,3vw,38px) clamp(16px,3vw,34px)', overflowY: 'auto', color: T.text, flex: 1, minHeight: 0 }}
+        style={{ padding: 'clamp(var(--space-16),3vw,var(--space-40)) clamp(var(--space-16),3vw,var(--space-32))', overflowY: 'auto', color: T.text, flex: 1, minHeight: 0 }}
       >
         {/* 편집 중이면 콘텐츠 대신 어드민 폼 */}
         {editing && (

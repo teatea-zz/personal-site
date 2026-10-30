@@ -88,7 +88,7 @@ export default function SiteClient({ notes, works }: Props) {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        padding: 'clamp(16px,3vw,40px)',
+        padding: 'clamp(var(--space-16),3vw,var(--space-40))',
       }}>
         {/* 라이트 모드 배경 사진 */}
         {!AMBIENT_VISUALS && (
@@ -106,7 +106,7 @@ export default function SiteClient({ notes, works }: Props) {
             {/* 사진 출처 — 홈카드와 겹치는 좁은 화면(≤680px)에선 숨김 (globals.css .photo-credit) */}
             <p className="photo-credit" style={{
               position: 'fixed', top: 'clamp(12px,2vw,28px)', right: 'clamp(12px,2vw,28px)', zIndex: 20,
-              margin: 0, padding: '4px 9px', borderRadius: 8,
+              margin: 0, padding: 'var(--space-4) var(--space-8)', borderRadius: 'var(--radius-8)',
               background: 'rgba(254,253,251,.55)',
               backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
               fontFamily: "'SUIT Variable',sans-serif", fontSize: 11, color: T.heroTextDim,

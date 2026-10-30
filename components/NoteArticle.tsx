@@ -22,24 +22,24 @@ export default function NoteArticle({ note, onLightbox }: Props) {
   const images = note.images ?? []
   const paragraphs = note.body.map((block: any) => (typeof block === 'string' ? block : block.content)).filter(Boolean) // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  // 제목 그룹(날짜 · 제목 · 부제)과 본문 사이 48px — 문단 간격(18px) · 본문 한 줄 높이(약 29~36px)보다 넓게 띄워 그룹을 구분
+  // 제목 그룹(날짜 · 제목 · 부제)과 본문 사이 48px — 문단 간격(16px) · 본문 한 줄 높이(약 29~36px)보다 넓게 띄워 그룹을 구분
   const header = (titleSize: string) => (
-    <div style={{ marginBottom: 48 }}>
+    <div style={{ marginBottom: 'var(--space-48)' }}>
       <div style={{ fontSize: 12, color: T.textFaint, display: 'flex', alignItems: 'baseline', gap: 0 }}>
         <span style={{ fontFamily: "'Geist',ui-monospace,monospace" }}>{note.date}</span>{/* 타입은 시트 제목 경로(INDEX / Daily)에 있어 생략 */}
         {note.private && (
           <span style={{ fontFamily: "'SUIT Variable',-apple-system,sans-serif", fontWeight: 600, letterSpacing: '.01em' }}> · 비공개</span>
         )}
       </div>
-      <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: titleSize, lineHeight: 1.12, letterSpacing: '-.025em', margin: '14px 0 0', color: T.heading }}>
+      <h2 style={{ fontFamily: "'SUIT Variable',sans-serif", fontWeight: 800, fontSize: titleSize, lineHeight: 1.12, letterSpacing: '-.025em', margin: 'var(--space-16) 0 0', color: T.heading }}>
         {note.title}
       </h2>
       {/* 부제 15px · 잉크 62% (크림 배경 대비 4.59:1, AA 통과) — 없으면 자리도 차지하지 않음 */}
-      {note.sub && <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, color: T.textDim, marginTop: 12 }}>{note.sub}</div>}
+      {note.sub && <div style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, color: T.textDim, marginTop: 'var(--space-12)' }}>{note.sub}</div>}
     </div>
   )
   const body = (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-16)' }}>
       {paragraphs.map((p: string, i: number) => <p key={i} style={pStyle}>{p}</p>)}
     </div>
   )
@@ -53,7 +53,7 @@ export default function NoteArticle({ note, onLightbox }: Props) {
       <article className="work-split">
         <div className="work-media">
           <div className="work-gallery-wrap">
-            <div className="work-gallery" data-cols={cols} style={{ display: 'grid', gap: 14, alignItems: 'start' }}>
+            <div className="work-gallery" data-cols={cols} style={{ display: 'grid', gap: 'var(--space-16)', alignItems: 'start' }}>
               {images.map((src, i) => <GalleryItem key={i} src={src} cols={cols} onClick={() => onLightbox(src)} />)}
             </div>
           </div>
@@ -74,8 +74,8 @@ export default function NoteArticle({ note, onLightbox }: Props) {
       {header('clamp(28px,4.6vw,46px)')}
       {body}
       {images.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24, alignItems: 'flex-start' }}>
-          {images.map((url, i) => <img key={i} src={url} alt="" style={{ maxWidth: '100%', height: 'auto', borderRadius: 10, display: 'block' }} />)}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-16)', marginTop: 'var(--space-24)', alignItems: 'flex-start' }}>
+          {images.map((url, i) => <img key={i} src={url} alt="" style={{ maxWidth: '100%', height: 'auto', borderRadius: 'var(--radius-12)', display: 'block' }} />)}
         </div>
       )}
     </article>

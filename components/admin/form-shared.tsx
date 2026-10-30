@@ -108,11 +108,11 @@ export function useDraft<T>(key: string, value: T, initial: T) {
 }
 
 export function DraftBanner({ onRestore, onDiscard }: { onRestore: () => void; onDiscard: () => void }) {
-  const btn: React.CSSProperties = { fontFamily: suit, fontSize: 'var(--fs-label)' as any, padding: '6px 14px', borderRadius: 8, cursor: 'pointer' }
+  const btn: React.CSSProperties = { fontFamily: suit, fontSize: 'var(--fs-label)' as any, padding: 'var(--space-8) var(--space-16)', borderRadius: 'var(--radius-8)', cursor: 'pointer' }
   return (
-    <div role="status" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', padding: '10px 14px', marginBottom: 18, borderRadius: 13, background: 'rgba(255,112,41,.08)', border: '1px solid rgba(255,112,41,.35)' }}>
+    <div role="status" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-12)', flexWrap: 'wrap', padding: 'var(--space-12) var(--space-16)', marginBottom: 'var(--space-16)', borderRadius: 'var(--radius-12)', background: 'rgba(255,112,41,.08)', border: '1px solid rgba(255,112,41,.35)' }}>
       <span style={{ fontFamily: suit, fontSize: 'var(--fs-label)' as any, color: INK }}>저장하지 않은 임시 글이 있어요. 불러올까요?</span>
-      <div style={{ display: 'flex', gap: 6 }}>
+      <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
         <button type="button" onClick={onRestore} style={{ ...btn, border: `1px solid ${INK}`, background: INK, color: '#FDFBF7', fontWeight: 700 }}>불러오기</button>
         <button type="button" onClick={onDiscard} style={{ ...btn, border: '1px solid rgba(35,31,26,.2)', background: 'transparent', color: 'rgba(35,31,26,.6)' }}>삭제</button>
       </div>
@@ -171,18 +171,18 @@ export function SortableThumbs({ items, setItems, onPick }: {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 14, userSelect: dragIdx !== null ? 'none' : undefined }}>
+    <div style={{ display: 'flex', gap: 'var(--space-12)', alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 'var(--space-16)', userSelect: dragIdx !== null ? 'none' : undefined }}>
       {items.map((item, i) => (
         <div key={item.url} data-thumb={i} onPointerDown={e => start(i, e)}
           style={{ position: 'relative', cursor: dragIdx !== null ? 'grabbing' : 'grab' }}>
           {/* 끄는 중인 이미지: 액센트(Update 버튼과 같은 라임) 4px 외곽선 — outline이라 크기 · 배치가 변하지 않음 */}
           <img src={item.url} alt="" draggable={false} style={{
-            width: 160, height: 120, objectFit: 'cover', borderRadius: 13, border: '1px solid rgba(35,31,26,.12)', display: 'block',
+            width: 160, height: 120, objectFit: 'cover', borderRadius: 'var(--radius-12)', border: '1px solid rgba(35,31,26,.12)', display: 'block',
             outline: dragIdx === i ? '4px solid var(--accent)' : 'none', outlineOffset: 0,
           }} />
           {/* 터치용 손잡이 (마우스는 썸네일 어디서나 끌기) */}
           <span data-handle aria-hidden="true"
-            style={{ position: 'absolute', left: 8, bottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 24, borderRadius: 999, background: 'rgba(35,31,26,.72)', color: '#FDFBF7', fontFamily: suit, fontSize: 13, touchAction: 'none' }}>
+            style={{ position: 'absolute', left: 8, bottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 24, borderRadius: 'var(--radius-pill)', background: 'rgba(35,31,26,.72)', color: '#FDFBF7', fontFamily: suit, fontSize: 13, touchAction: 'none' }}>
             ⠿
           </span>
           {/* 화면에서만 빼고, 실제 파일 삭제는 저장 성공 후 */}
@@ -194,7 +194,7 @@ export function SortableThumbs({ items, setItems, onPick }: {
         </div>
       ))}
       <button type="button" onClick={onPick}
-        style={{ flexShrink: 0, background: 'rgba(35,31,26,.06)', border: '1px dashed rgba(35,31,26,.18)', borderRadius: 13, color: INK, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 'var(--fs-btn)' as any, cursor: 'pointer', whiteSpace: 'nowrap', width: 160, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        style={{ flexShrink: 0, background: 'rgba(35,31,26,.06)', border: '1px dashed rgba(35,31,26,.18)', borderRadius: 'var(--radius-12)', color: INK, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 'var(--fs-btn)' as any, cursor: 'pointer', whiteSpace: 'nowrap', width: 160, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         ↑ Upload
       </button>
     </div>
@@ -206,13 +206,13 @@ export function Segmented<V extends string | number>({ label, value, options, on
   label: string; value: V; options: { value: V; label: string }[]; onChange: (v: V) => void
 }) {
   return (
-    <div role="radiogroup" aria-label={label} style={{ display: 'flex', gap: 4, padding: 4, border: '1px solid rgba(35,31,26,.15)', borderRadius: 13, background: '#FFFFFF' }}>
+    <div role="radiogroup" aria-label={label} style={{ display: 'flex', gap: 'var(--space-4)', padding: 'var(--space-4)', border: '1px solid rgba(35,31,26,.15)', borderRadius: 'var(--radius-12)', background: '#FFFFFF' }}>
       {options.map(o => {
         const on = value === o.value
         return (
           <button key={String(o.value)} type="button" role="radio" aria-checked={on} onClick={() => onChange(o.value)}
             style={{
-              flex: 1, whiteSpace: 'nowrap', padding: '7px 6px', borderRadius: 9, border: 0, cursor: 'pointer',
+              flex: 1, whiteSpace: 'nowrap', padding: 'var(--space-8) var(--space-8)', borderRadius: 'var(--radius-8)', border: 0, cursor: 'pointer',
               fontFamily: suit, fontSize: 'var(--fs-label)' as any, fontWeight: on ? 700 : 500,
               background: on ? INK : 'transparent', color: on ? '#FDFBF7' : 'rgba(35,31,26,.6)',
             }}>

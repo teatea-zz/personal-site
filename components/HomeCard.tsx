@@ -26,14 +26,14 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
         backdropFilter: 'blur(22px) saturate(1.1)',
         WebkitBackdropFilter: 'blur(22px) saturate(1.1)',
         border: `1px solid ${T.heroBorder}`,
-        borderRadius: 14,
-        padding: 'clamp(20px,5.5vw,24px)',
+        borderRadius: 'var(--radius-16)',
+        padding: 'clamp(var(--space-20),5.5vw,var(--space-24))',
         color: T.heroText,
         boxShadow: T.heroShadow,
       }}>
         <h1 style={{ fontFamily: "'Geist',ui-monospace,monospace", fontWeight: 800, fontSize: 'clamp(50px,17.5vw,96px)', lineHeight: 1, letterSpacing: '-.02em', margin: 0, whiteSpace: 'nowrap', color: '#FF7029' }}>lalahyun</h1>
 
-        <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13.5, fontWeight: 450, lineHeight: 1.65, color: T.heroTextDim, margin: '16px 0 4px', maxWidth: '44ch' }}>
+        <p style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 13.5, fontWeight: 450, lineHeight: 1.65, color: T.heroTextDim, margin: 'var(--space-16) 0 var(--space-4)', maxWidth: '44ch' }}>
           UX/UI DESIGNER<br />
           기술이 발전할수록 좁아지는 선택지 앞에서,<br />
           디지털이 낯선 사람도 선택할 수 있는 대안을 만듭니다.<br />
@@ -42,7 +42,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
             alt=""
             width={16}
             height={16}
-            style={{ display: 'inline-block', width: 16, height: 16, verticalAlign: '-3px', marginRight: 6 }}
+            style={{ display: 'inline-block', width: 16, height: 16, verticalAlign: '-3px', marginRight: 'var(--space-8)' }}
           />
           {' '}
           <a
@@ -56,7 +56,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
           </a>
         </p>
 
-        <div style={{ marginTop: 16, borderTop: `1px solid ${T.heroHairline}` }}>
+        <div style={{ marginTop: 'var(--space-16)', borderTop: `1px solid ${T.heroHairline}` }}>
           {recentNotes.map((note, i) => (
             <button
               key={note.id}
@@ -67,7 +67,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
                 textAlign: 'left',
                 border: 0,
                 borderBottom: `1px solid ${T.heroHairline}`,
-                padding: '16px 14px',
+                padding: 'var(--space-16) var(--space-16)',
                 cursor: 'pointer',
                 display: 'block',
                 color: T.heroText,
@@ -75,7 +75,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
                 background: 'transparent',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-12)', alignItems: 'baseline' }}>
                 <span style={{
                   fontFamily: "'Geist',ui-monospace,monospace",
                   fontSize: 12, fontWeight: 500,
@@ -87,17 +87,17 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
               </div>
               <div style={{
                 fontFamily: "'SUIT Variable',sans-serif",
-                fontSize: 15, fontWeight: 600, marginTop: 5,
+                fontSize: 15, fontWeight: 600, marginTop: 'var(--space-4)',
                 color: 'currentColor',
               }}>
                 {note.title}
                 {/* 비공개 마커 — 관리자 세션에서만 노출되는 글 */}
-                {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 3, verticalAlign: 'text-top' }} />}
+                {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 'var(--space-4)', verticalAlign: 'text-top' }} />}
               </div>            </button>
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)', marginTop: 'var(--space-16)' }}>
           {(['work', 'about', 'contact', 'index'] as const).map(v => (
             <button
               key={v}
@@ -111,14 +111,14 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
                 fontSize: 14,
                 fontWeight: 400,
                 textTransform: 'uppercase',
-                padding: 13,
-                borderRadius: 13,
+                padding: 'var(--space-12)',
+                borderRadius: 'var(--radius-12)',
                 cursor: 'pointer',
                 transition: '.18s',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                gap: 8,
+                gap: 'var(--space-8)',
                 background: 'transparent',
               }}
             >
@@ -129,7 +129,7 @@ export default function HomeCard({ recentNotes, onOpenNote, onOpenView, isAdmin,
         </div>
 
         {/* © 더블클릭 = 숨은 어드민 로그인 입구 (커서 · hover 변화 없음) / 로그인 중엔 Logout 표시 */}
-        <div style={{ marginTop: 16, fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.heroGhost, userSelect: 'none' }}>
+        <div style={{ marginTop: 'var(--space-16)', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.heroGhost, userSelect: 'none' }}>
           <span onDoubleClick={onSecretLogin}>© lalahyun 2026</span>
           {isAdmin && (
             <>

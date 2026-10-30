@@ -69,14 +69,14 @@ const inp: React.CSSProperties = {
   width: '100%',
   background: '#FFFFFF',
   border: '1px solid rgba(35,31,26,.15)',
-  borderRadius: 13,
-  padding: '10px 14px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-16)',
   color: INK,
   fontFamily: suit,
   fontSize: 'var(--fs-input)' as any,
   fontWeight: 400,
   outline: 'none',
-  marginBottom: 14,
+  marginBottom: 'var(--space-16)',
 }
 const lbl: React.CSSProperties = {
   fontFamily: suit,
@@ -84,14 +84,14 @@ const lbl: React.CSSProperties = {
   fontWeight: 400,
   color: 'rgba(35,31,26,.45)',
   display: 'block',
-  marginBottom: 5,
+  marginBottom: 'var(--space-4)',
 }
 const uploadBtn: React.CSSProperties = {
   flexShrink: 0,
   background: 'rgba(35,31,26,.06)',
   border: '1px solid rgba(35,31,26,.18)',
-  borderRadius: 13,
-  padding: '10px 16px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-16)',
   color: INK,
   fontFamily: mono,
   fontSize: 'var(--fs-btn)' as any,
@@ -103,8 +103,8 @@ const deleteBtn: React.CSSProperties = {
   background: 'transparent',
   color: '#c0392b',
   border: '1px solid rgba(192,57,43,.3)',
-  borderRadius: 13,
-  padding: '10px 22px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-24)',
   fontFamily: mono,
   fontSize: 'var(--fs-btn)' as any,
   cursor: 'pointer',
@@ -180,16 +180,16 @@ export default function NoteForm({ initial, onSave, onCancel, onDelete, onDirtyC
           <div style={{ position: 'relative' }}>
             {typeOpen && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setTypeOpen(false)} />}
             <button type="button" onClick={() => setTypeOpen(o => !o)}
-              style={{ ...inp, marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 36, position: 'relative', cursor: 'pointer', textAlign: 'left' }}>
+              style={{ ...inp, marginBottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 'var(--space-36)', position: 'relative', cursor: 'pointer', textAlign: 'left' }}>
               {form.type}
               <ChevronDown size={16} strokeWidth={1.5} style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${typeOpen ? 180 : 0}deg)`, transition: 'transform .2s ease-out', pointerEvents: 'none', color: 'rgba(35,31,26,.45)' }} />
             </button>
             {typeOpen && (
-              <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 13, overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top left', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
+              <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100, background: '#fff', border: '1px solid rgba(35,31,26,.12)', borderRadius: 'var(--radius-12)', overflow: 'hidden', boxShadow: '0 4px 16px rgba(35,31,26,.1)', minWidth: '100%', transformOrigin: 'top left', animation: 'dropdown-in .18s cubic-bezier(.23,1,.32,1) forwards' }}>
                 {TYPES.map(t => (
                   <button key={t} type="button"
                     onClick={() => { setForm(f => ({ ...f, type: t, layout: defaultLayout(t), ...(t === '일상' && !f.private ? { private: true } : {}) })); setTypeOpen(false) }}
-                    style={{ width: '100%', textAlign: 'left', padding: '10px 16px', fontFamily: suit, fontSize: 'var(--fs-input)' as any, fontWeight: t === form.type ? 600 : 400, color: t === form.type ? INK : 'rgba(35,31,26,.55)', background: t === form.type ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                    style={{ width: '100%', textAlign: 'left', padding: 'var(--space-12) var(--space-16)', fontFamily: suit, fontSize: 'var(--fs-input)' as any, fontWeight: t === form.type ? 600 : 400, color: t === form.type ? INK : 'rgba(35,31,26,.55)', background: t === form.type ? 'rgba(35,31,26,.04)' : 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                     {t}
                   </button>
                 ))}
@@ -209,7 +209,7 @@ export default function NoteForm({ initial, onSave, onCancel, onDelete, onDirtyC
       </div>
 
       {/* Title(2칸) + Subtitle(1칸) — 윗줄과 같은 3칸 그리드라 Subtitle 폭 = Layout 폭 */}
-      <div className="adm-form-grid3eq" style={{ marginTop: 14, marginBottom: 14 }}>
+      <div className="adm-form-grid3eq" style={{ marginTop: 'var(--space-16)', marginBottom: 'var(--space-16)' }}>
         <div className="adm-span2">
           <label style={lbl}>Title</label>
           <input style={{ ...inp, marginBottom: 0 }} value={form.title} onChange={set('title')} required />
@@ -229,24 +229,24 @@ export default function NoteForm({ initial, onSave, onCancel, onDelete, onDirtyC
       <input ref={imagesRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
         onChange={e => { const items = pickFiles(e.target.files); setImages(list => [...list, ...items]); e.target.value = '' }} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
-        <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-12)', marginTop: 'var(--space-16)' }}>
+        <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 'var(--space-8)', cursor: 'pointer' }}
           onClick={() => setForm(f => ({ ...f, private: !f.private }))}>
           {form.private
             ? <CheckSquare size={20} strokeWidth={1.5} color={INK} />
             : <Square size={20} strokeWidth={1.5} color="rgba(35,31,26,.35)" />}
           비공개
         </label>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-12)' }}>
           {initial && onDelete && (
             <button type="button" onClick={onDelete} disabled={!!saving} style={deleteBtn}>Delete</button>
           )}
           <button type="submit" disabled={!!saving}
-            style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
+            style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 'var(--radius-12)', padding: 'var(--space-12) var(--space-24)', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
             {saving ?? (initial ? 'Update' : 'Create')}
           </button>
           <button type="button" onClick={handleCancel} disabled={!!saving}
-            style={{ background: 'transparent', color: `rgba(35,31,26,.5)`, border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
+            style={{ background: 'transparent', color: `rgba(35,31,26,.5)`, border: '1px solid rgba(35,31,26,.2)', borderRadius: 'var(--radius-12)', padding: 'var(--space-12) var(--space-24)', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
             Cancel
           </button>
         </div>

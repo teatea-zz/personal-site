@@ -28,7 +28,7 @@ export default function SpotifyPlayer() {
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
         title="마지막으로 들은 곡"
-        style={{ display: 'block', borderRadius: 12 }}
+        style={{ display: 'block', borderRadius: 'var(--radius-12)' }}
       />
     </div>
   )

@@ -42,41 +42,41 @@ export default function AdminLoginModal({ open, onClose }: Props) {
     width: '100%',
     background: 'rgba(35,31,26,.05)',
     border: '1px solid rgba(35,31,26,.18)',
-    borderRadius: 13,
-    padding: '10px 14px',
+    borderRadius: 'var(--radius-12)',
+    padding: 'var(--space-12) var(--space-16)',
     color: INK,
     fontFamily: suit,
     fontSize: 14,
     outline: 'none',
-    marginBottom: 16,
+    marginBottom: 'var(--space-16)',
   }
-  const labelStyle: React.CSSProperties = { fontFamily: mono, fontSize: 14, color: 'rgba(35,31,26,.45)', display: 'block', marginBottom: 6 }
+  const labelStyle: React.CSSProperties = { fontFamily: mono, fontSize: 14, color: 'rgba(35,31,26,.45)', display: 'block', marginBottom: 'var(--space-8)' }
 
   return (
     <div
       onClick={onClose}
-      style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(35,31,26,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
+      style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(35,31,26,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-16)' }}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Admin sign in"
         onClick={e => e.stopPropagation()}
-        style={{ width: '100%', maxWidth: 340, background: '#FDFBF7', border: '1px solid rgba(35,31,26,.1)', borderRadius: 13, padding: 28, boxShadow: '0 24px 70px -30px rgba(35,31,26,.4)' }}
+        style={{ width: '100%', maxWidth: 340, background: '#FDFBF7', border: '1px solid rgba(35,31,26,.1)', borderRadius: 'var(--radius-12)', padding: 'var(--space-28)', boxShadow: '0 24px 70px -30px rgba(35,31,26,.4)' }}
       >
         <form onSubmit={handleSubmit}>
-          {error && <div style={{ fontFamily: suit, fontSize: 13, color: '#c0392b', marginBottom: 16 }}>{error}</div>}
+          {error && <div style={{ fontFamily: suit, fontSize: 13, color: '#c0392b', marginBottom: 'var(--space-16)' }}>{error}</div>}
           <label style={labelStyle}>ID</label>
           <input style={inputStyle} type="text" value={id} onChange={e => setId(e.target.value)} required autoFocus autoComplete="username" />
           <label style={labelStyle}>Password</label>
           <input style={inputStyle} type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" />
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 'var(--space-8)' }}>
             <button type="submit" disabled={loading}
-              style={{ flex: 1, background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: 12, fontFamily: mono, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+              style={{ flex: 1, background: 'var(--accent)', color: INK, border: 'none', borderRadius: 'var(--radius-12)', padding: 'var(--space-12)', fontFamily: mono, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
             <button type="button" onClick={onClose}
-              style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '12px 18px', fontFamily: mono, fontSize: 14, cursor: 'pointer' }}>
+              style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 'var(--radius-12)', padding: 'var(--space-12) var(--space-16)', fontFamily: mono, fontSize: 14, cursor: 'pointer' }}>
               Cancel
             </button>
           </div>

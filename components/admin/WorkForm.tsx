@@ -61,14 +61,14 @@ const inp: React.CSSProperties = {
   width: '100%',
   background: '#FFFFFF',
   border: '1px solid rgba(35,31,26,.15)',
-  borderRadius: 13,
-  padding: '10px 14px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-16)',
   color: INK,
   fontFamily: suit,
   fontSize: 'var(--fs-input)' as any,
   fontWeight: 400,
   outline: 'none',
-  marginBottom: 14,
+  marginBottom: 'var(--space-16)',
 }
 const lbl: React.CSSProperties = {
   fontFamily: suit,
@@ -76,14 +76,14 @@ const lbl: React.CSSProperties = {
   fontWeight: 400,
   color: 'rgba(35,31,26,.45)',
   display: 'block',
-  marginBottom: 5,
+  marginBottom: 'var(--space-4)',
 }
 const uploadBtn: React.CSSProperties = {
   flexShrink: 0,
   background: 'rgba(35,31,26,.06)',
   border: '1px solid rgba(35,31,26,.18)',
-  borderRadius: 13,
-  padding: '10px 16px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-16)',
   color: INK,
   fontFamily: mono,
   fontSize: 'var(--fs-btn)' as any,
@@ -95,8 +95,8 @@ const deleteBtn: React.CSSProperties = {
   background: 'transparent',
   color: '#c0392b',
   border: '1px solid rgba(192,57,43,.3)',
-  borderRadius: 13,
-  padding: '10px 22px',
+  borderRadius: 'var(--radius-12)',
+  padding: 'var(--space-12) var(--space-24)',
   fontFamily: mono,
   fontSize: 'var(--fs-btn)' as any,
   cursor: 'pointer',
@@ -189,7 +189,7 @@ export default function WorkForm({ initial, onSave, onCancel, onDelete, onDirtyC
       </div>
 
       {/* Row 2: Role / Field / Tools / Tag */}
-      <div className="adm-form-grid4" style={{ marginTop: 14 }}>
+      <div className="adm-form-grid4" style={{ marginTop: 'var(--space-16)' }}>
         <div><label style={lbl}>Role</label><input style={{ ...inp, marginBottom: 0 }} value={form.role} onChange={set('role')} required /></div>
         <div><label style={lbl}>Field</label><input style={{ ...inp, marginBottom: 0 }} value={form.field} onChange={set('field')} required /></div>
         <div><label style={lbl}>Tools</label><input style={{ ...inp, marginBottom: 0 }} value={form.tools} onChange={set('tools')} placeholder="Figma, React" required /></div>
@@ -197,9 +197,9 @@ export default function WorkForm({ initial, onSave, onCancel, onDelete, onDirtyC
       </div>
 
       {/* Hero image */}
-      <div style={{ marginTop: 14 }}>
+      <div style={{ marginTop: 'var(--space-16)' }}>
         <label style={lbl}>Hero Image</label>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: heroPreview ? 10 : 14 }}>
+        <div style={{ display: 'flex', gap: 'var(--space-8)', alignItems: 'center', marginBottom: heroPreview ? 'var(--space-12)' : 'var(--space-16)' }}>
           <input style={{ ...inp, marginBottom: 0, flex: 1 }} value={heroFile ? heroFile.file!.name : form.img} disabled={!!heroFile}
             onChange={set('img')} placeholder="URL 직접 입력 또는 파일 선택 (저장할 때 업로드)" />
           <button type="button" onClick={() => heroRef.current?.click()} style={uploadBtn}>↑ Upload</button>
@@ -207,7 +207,7 @@ export default function WorkForm({ initial, onSave, onCancel, onDelete, onDirtyC
             onChange={e => { const [item] = pickFiles(e.target.files); if (item) { if (heroFile) revoke([heroFile]); setHeroFile(item) } e.target.value = '' }} />
         </div>
         {heroPreview && (
-          <div style={{ position: 'relative', aspectRatio: '16/7', overflow: 'hidden', borderRadius: 13, background: 'rgba(35,31,26,.06)', marginBottom: 14 }}>
+          <div style={{ position: 'relative', aspectRatio: '16/7', overflow: 'hidden', borderRadius: 'var(--radius-12)', background: 'rgba(35,31,26,.06)', marginBottom: 'var(--space-16)' }}>
             <img src={heroPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             {/* 화면에서만 빼고, 실제 파일 삭제는 저장 성공 후 */}
             <button type="button"
@@ -230,24 +230,24 @@ export default function WorkForm({ initial, onSave, onCancel, onDelete, onDirtyC
         onChange={e => { const items = pickFiles(e.target.files); setGallery(g => [...g, ...items]); e.target.value = '' }} />
 
       {/* 하단: 비공개 (노트와 같은 위치) · 버튼 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
-        <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-12)', marginTop: 'var(--space-16)' }}>
+        <label style={{ ...lbl, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 'var(--space-8)', cursor: 'pointer' }}
           onClick={() => setForm(f => ({ ...f, private: !f.private }))}>
           {form.private
             ? <CheckSquare size={20} strokeWidth={1.5} color={INK} />
             : <Square size={20} strokeWidth={1.5} color="rgba(35,31,26,.35)" />}
           비공개
         </label>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-12)' }}>
           {initial && onDelete && (
             <button type="button" onClick={onDelete} disabled={!!saving} style={deleteBtn}>Delete</button>
           )}
           <button type="submit" disabled={!!saving}
-            style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
+            style={{ background: 'var(--accent)', color: INK, border: 'none', borderRadius: 'var(--radius-12)', padding: 'var(--space-12) var(--space-24)', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, fontWeight: 600, cursor: 'pointer' }}>
             {saving ?? (initial ? 'Update' : 'Create')}
           </button>
           <button type="button" onClick={handleCancel} disabled={!!saving}
-            style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 13, padding: '10px 22px', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
+            style={{ background: 'transparent', color: 'rgba(35,31,26,.5)', border: '1px solid rgba(35,31,26,.2)', borderRadius: 'var(--radius-12)', padding: 'var(--space-12) var(--space-24)', fontFamily: mono, fontSize: 'var(--fs-btn)' as any, cursor: 'pointer' }}>
             Cancel
           </button>
         </div>

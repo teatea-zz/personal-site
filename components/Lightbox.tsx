@@ -18,7 +18,7 @@ export default function Lightbox({ src, onClose }: Props) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'clamp(16px,4vw,64px)',
+        padding: 'clamp(var(--space-16),4vw,var(--space-64))',
         background: 'rgba(8,8,8,.94)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
@@ -30,8 +30,8 @@ export default function Lightbox({ src, onClose }: Props) {
         className="hover-accent"
         style={{
           position: 'absolute',
-          top: 'clamp(14px,3vw,28px)',
-          right: 'clamp(14px,3vw,28px)',
+          top: 'clamp(var(--space-16),3vw,var(--space-28))',
+          right: 'clamp(var(--space-16),3vw,var(--space-28))',
           width: 44,
           height: 44,
           borderRadius: '50%',

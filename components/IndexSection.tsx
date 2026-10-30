@@ -24,8 +24,8 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
     fontFamily: "'SUIT Variable',-apple-system,sans-serif",
     fontSize: 12,
     fontWeight: 600,
-    padding: '6px 16px',
-    borderRadius: 8,
+    padding: 'var(--space-8) var(--space-16)',
+    borderRadius: 'var(--radius-8)',
     border: `1px solid ${T.btnBorder}`,
     background: 'transparent',
     color: T.text,
@@ -45,17 +45,17 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
   return (
     <div style={{ maxWidth: 920, margin: '0 auto' }}>
       {/* 필터 탭 + 현재 필터의 콘텐츠 개수 (TYPE 열 위, 탭과 세로 가운데 정렬) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flex: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-12)', marginBottom: 'var(--space-24)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-8)', flex: 1 }}>
           {tabs.map(t => (
             <button key={t} onClick={() => setFilter(t)} style={t === filter ? tabActive : tabBase}>{t}</button>
           ))}
         </div>
-        <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 500, color: T.textDim, width: TYPE_BADGE_W, marginRight: 14, textAlign: 'center', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 500, color: T.textDim, width: TYPE_BADGE_W, marginRight: 'var(--space-16)', textAlign: 'center', whiteSpace: 'nowrap', flexShrink: 0 }}>
           {filtered.length}개
         </span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.textGhost, padding: '0 14px 10px', borderBottom: `1px solid ${T.hairlineStrong}` }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: "'Geist',ui-monospace,monospace", fontSize: 12, color: T.textGhost, padding: '0 var(--space-16) var(--space-12)', borderBottom: `1px solid ${T.hairlineStrong}` }}>
         <span>DATE / TITLE</span><span style={{ width: TYPE_BADGE_W, textAlign: 'center' }}>TYPE</span>
       </div>
       {filtered.map((note, i) => (
@@ -68,12 +68,12 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
             textAlign: 'left',
             border: 0,
             borderBottom: `1px solid ${T.hairline}`,
-            padding: '14px 14px',
+            padding: 'var(--space-16) var(--space-16)',
             cursor: 'pointer',
             color: T.text,
             display: 'grid',
             gridTemplateColumns: '96px 1fr auto',
-            gap: 14,
+            gap: 'var(--space-16)',
             alignItems: 'center',
             transition: 'background .15s,color .15s',
             background: 'transparent',
@@ -83,10 +83,10 @@ export default function IndexSection({ notes, onOpenNote }: Props) {
           <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 15, fontWeight: 600, color: 'currentColor', opacity: .92, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {note.title}
             {/* 비공개 마커 — 관리자 세션에서만 노출되는 글 */}
-            {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 3, verticalAlign: 'text-top' }} />}
+            {note.private && <span aria-label="비공개" style={{ display: 'inline-block', width: 4, height: 4, borderRadius: '50%', background: '#FF6D19', marginLeft: 'var(--space-4)', verticalAlign: 'text-top' }} />}
           </span>
           {/* 타입 배지: 글자 70% / 테두리 50% (배지 opacity .7 × 테두리 71% ≈ 50%, hover 시 currentColor 따라 같이 바뀜) */}
-          <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 600, color: 'currentColor', opacity: .7, border: '1px solid color-mix(in srgb, currentColor 71%, transparent)', borderRadius: 5, padding: '3px 0', whiteSpace: 'nowrap', width: TYPE_BADGE_W, boxSizing: 'border-box', textAlign: 'center' }}>
+          <span style={{ fontFamily: "'SUIT Variable',sans-serif", fontSize: 12, fontWeight: 600, color: 'currentColor', opacity: .7, border: '1px solid color-mix(in srgb, currentColor 71%, transparent)', borderRadius: 'var(--radius-4)', padding: 'var(--space-4) 0', whiteSpace: 'nowrap', width: TYPE_BADGE_W, boxSizing: 'border-box', textAlign: 'center' }}>
             {TYPE_EN[note.type] || note.type}
           </span>
         </button>

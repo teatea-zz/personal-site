@@ -11,7 +11,7 @@ button { background-color: transparent; }
 
 *::-webkit-scrollbar { width: 9px; height: 9px; }
 /* 다크 모드 복원 시: background: rgba(255,255,255,.18) */
-*::-webkit-scrollbar-thumb { background: rgba(35,31,26,.22); border-radius: 9px; }
+*::-webkit-scrollbar-thumb { background: rgba(35,31,26,.22); border-radius: var(--radius-8); }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
@@ -23,6 +23,16 @@ button { background-color: transparent; }
 :root {
   --accent: #EEF860;
   --accent-fg: #231F1A;
+
+  /* 간격 단계 — 모두 4의 배수, 이름의 숫자 = px (피그마 spacing/N 과 1:1)
+     padding · margin · gap 에는 이 값만 사용 */
+  --space-4: 4px;   --space-8: 8px;   --space-12: 12px; --space-16: 16px;
+  --space-20: 20px; --space-24: 24px; --space-28: 28px; --space-32: 32px;
+  --space-36: 36px; --space-40: 40px; --space-44: 44px; --space-48: 48px;
+  --space-64: 64px;
+
+  /* 모서리 곡률 — 4의 배수 5단계 (피그마 radius/N 과 1:1) */
+  --radius-4: 4px; --radius-8: 8px; --radius-12: 12px; --radius-16: 16px; --radius-pill: 999px;
 
   /* Admin 폰트 — 데스크톱 ≥1600px
      --fs-input: 입력칸 (모바일도 16px 이상 — 아이폰은 16px 미만 입력칸을 누르면 화면을 자동 확대)
@@ -71,7 +81,7 @@ button { background-color: transparent; }
    데스크톱: 소셜바(50px) 좌측 플로팅 / 모바일: 홈카드 아래 세로 스택 */
 .spotify-dock {
   position: fixed;
-  right: calc(clamp(12px,2vw,28px) + 50px + 10px);
+  right: calc(clamp(12px,2vw,28px) + 50px + var(--space-12));
   bottom: clamp(12px,2vw,28px);
   z-index: 20;
   width: min(300px, calc(100vw - 140px));
@@ -81,7 +91,7 @@ button { background-color: transparent; }
     position: static;
     /* 우측 플로팅 소셜바(50px + 여백)와 겹치지 않도록 폭 제한 */
     width: min(calc(100% - 62px), 448px);
-    margin-top: 12px;
+    margin-top: var(--space-12);
   }
 }
 
@@ -104,7 +114,7 @@ button { background-color: transparent; }
 .work-split {
   /* 이미지 : 텍스트 비율 (텍스트 = 1fr) — 3:1로 바꾸려면 --media-ratio: 3fr */
   --media-ratio: 2fr;
-  display: flex; flex-direction: column; gap: 22px; max-width: 920px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: var(--space-24); max-width: 920px; margin: 0 auto;
 }
 .work-media { display: contents; }
 .work-hero { order: 1; }
@@ -113,11 +123,11 @@ button { background-color: transparent; }
 @media (min-width: 901px) {
   .sheet-body[data-split] { overflow: hidden !important; display: flex; }
   .work-split {
-    display: grid; grid-template-columns: minmax(0, var(--media-ratio)) minmax(0, 1fr); gap: clamp(24px, 3vw, 44px);
+    display: grid; grid-template-columns: minmax(0, var(--media-ratio)) minmax(0, 1fr); gap: clamp(var(--space-24), 3vw, var(--space-44));
     /* 최대 폭 제한 없음 — 시트 제목 줄(좌: 제목 / 우: Close)과 좌우 끝선을 맞춤 */
     width: 100%; max-width: none; height: 100%;
   }
-  .work-media { display: block; overflow-y: auto; min-height: 0; padding-right: 24px; }
+  .work-media { display: block; overflow-y: auto; min-height: 0; padding-right: var(--space-24); }
   .work-info { overflow-y: auto; min-height: 0; }
   /* 텍스트 박스 최소 높이 = 열 전체 높이 → 배지가 항상 시트 하단 패딩 바로 위 */
   .work-info-inner { min-height: 100%; }
@@ -134,7 +144,7 @@ button { background-color: transparent; }
 .gallery-img:hover { transform: scale(1.04); }
 
 /* ── Admin header ── */
-.adm-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12; }
+.adm-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--space-12); }
 .adm-header-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (max-width: 720px) {
@@ -147,26 +157,26 @@ button { background-color: transparent; }
 .adm-notes-head {
   display: grid;
   grid-template-columns: 110px 1fr 80px 128px;
-  gap: 12px; padding: 10px 18px;
+  gap: var(--space-12); padding: var(--space-12) var(--space-16);
   border-bottom: 1px solid rgba(35,31,26,.1);
 }
 .adm-notes-row {
   display: grid;
   grid-template-columns: 110px 1fr 80px 128px;
-  gap: 12px; padding: 14px 18px;
+  gap: var(--space-12); padding: var(--space-16) var(--space-16);
   border-bottom: 1px solid rgba(35,31,26,.06);
   align-items: center;
 }
 .adm-works-head {
   display: grid;
   grid-template-columns: 64px 1fr 90px 60px 128px;
-  gap: 12px; padding: 10px 18px;
+  gap: var(--space-12); padding: var(--space-12) var(--space-16);
   border-bottom: 1px solid rgba(35,31,26,.1);
 }
 .adm-works-row {
   display: grid;
   grid-template-columns: 64px 1fr 90px 60px 128px;
-  gap: 12px; padding: 10px 18px;
+  gap: var(--space-12); padding: var(--space-12) var(--space-16);
   border-bottom: 1px solid rgba(35,31,26,.06);
   align-items: center;
 }
@@ -178,28 +188,28 @@ button { background-color: transparent; }
 .adm-works-head > :nth-child(4), .adm-works-row > :nth-child(4) { text-align: center; }
 /* 액션 버튼(Edit/Del)은 우측 정렬 */
 .adm-col-actions { justify-content: flex-end; }
-.adm-form-grid2   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.adm-form-grid3   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
-.adm-form-grid3eq { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.adm-form-grid3-bt { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
-.adm-form-grid4   { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.adm-form-grid2   { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+.adm-form-grid3   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-12); }
+.adm-form-grid3eq { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-12); }
+.adm-form-grid3-bt { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-12); margin-top: var(--space-16); }
+.adm-form-grid4   { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-12); }
 /* 3칸 그리드에서 2칸 차지 (노트 폼 Title) — 1칸 그리드가 되는 좁은 화면에선 해제 */
 .adm-span2 { grid-column: span 2; }
 @media (max-width: 480px) { .adm-span2 { grid-column: auto; } }
-@media (max-width: 1023px) { .adm-form-grid4 { grid-template-columns: 1fr 1fr; gap: 10px; } }
+@media (max-width: 1023px) { .adm-form-grid4 { grid-template-columns: 1fr 1fr; gap: var(--space-12); } }
 @media (max-width: 480px)  { .adm-form-grid4 { grid-template-columns: 1fr; } }
 
 /* Laptop (1024–1440px): 리스트 컬럼 축소 + 폼 3열 → 2열 */
 @media (max-width: 1440px) {
   .adm-notes-head,
-  .adm-notes-row { grid-template-columns: 100px 1fr 76px 112px; gap: 10px; }
+  .adm-notes-row { grid-template-columns: 100px 1fr 76px 112px; gap: var(--space-12); }
   .adm-works-head,
-  .adm-works-row { grid-template-columns: 56px 1fr 80px 52px 112px; gap: 10px; }
+  .adm-works-row { grid-template-columns: 56px 1fr 80px 52px 112px; gap: var(--space-12); }
 
-  .adm-form-grid3   { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .adm-form-grid3eq { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .adm-form-grid3-bt { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .adm-form-grid2   { gap: 10px; }
+  .adm-form-grid3   { grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+  .adm-form-grid3eq { grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+  .adm-form-grid3-bt { grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+  .adm-form-grid2   { gap: var(--space-12); }
 }
 
 @media (max-width: 720px) {
@@ -210,7 +220,7 @@ button { background-color: transparent; }
   .adm-notes-row {
     grid-template-columns: 1fr auto auto;
     grid-template-areas: none;
-    row-gap: 0; column-gap: 10px;
+    row-gap: 0; column-gap: var(--space-12);
     align-items: center;
   }
   .adm-notes-row .adm-col-date   { display: none; }
@@ -225,7 +235,7 @@ button { background-color: transparent; }
     grid-template-rows: auto auto;
     grid-template-areas: "thumb title   actions"
                          "thumb role    actions";
-    row-gap: 4px; column-gap: 10px;
+    row-gap: var(--space-4); column-gap: var(--space-12);
     align-items: start;
   }
   .adm-works-row .adm-col-thumb  { grid-area: thumb; grid-row: 1 / 3; align-self: center; }
